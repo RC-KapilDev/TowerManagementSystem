@@ -1,1 +1,17 @@
 
+
+
+////kapildev
+/// maintenance_report table
+CREATE TYPE priority_enum AS ENUM ('lowest', 'moderate', 'high');
+
+CREATE TABLE maintenance_report (
+    maintenance_id SERIAL PRIMARY KEY,
+    technician_id INTEGER REFERENCES technician(technician_id),
+    workorder_id INTEGER REFERENCES workorder(workorder_id),
+    equipments_required TEXT,
+    issues_faced TEXT,
+    priority priority_enum,
+    created_at DATE,
+    deleted_status BOOLEAN
+);
