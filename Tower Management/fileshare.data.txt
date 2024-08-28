@@ -15,3 +15,23 @@ CREATE TABLE maintenance_report (
     created_at DATE,
     deleted_status BOOLEAN
 );
+
+
+//Thakshika-tower query
+
+CREATE TABLE tower_info ( 
+    tower_id SERIAL PRIMARY KEY,
+    location TEXT,
+    height DOUBLE PRECISION,
+    type TEXT,
+    status TEXT CHECK (status IN ('active', 'inactive', 'under-maintenance')), 
+    pincode INTEGER,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    power_reading INTEGER,
+    fuel_reading NUMERIC,
+    created_at DATE,
+    updated_at DATE,
+    last_maintained DATE,
+    deleted_status BOOLEAN
+);
