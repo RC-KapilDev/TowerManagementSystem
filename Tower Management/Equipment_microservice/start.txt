@@ -1,0 +1,12 @@
+CREATE TABLE equipments (
+    equipment_id SERIAL PRIMARY KEY,
+    tower_id INTEGER REFERENCES towers(tower_id),
+    workorder_id INTEGER REFERENCES workorders(workorder_id),
+    serial_number VARCHAR(255),
+    manufacturer VARCHAR(255),
+    model VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    equipment_name VARCHAR(255),
+    deleted_status BOOLEAN DEFAULT FALSE,
+    claimed BOOLEAN DEFAULT FALSE
+);
