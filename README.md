@@ -27,6 +27,9 @@ Each microservice is responsible for managing its specific domain and communicat
   - `POST /workorders` - Create a new work order.
   - `PUT /workorders/{id}` - Update work order details.
   - `PATCH /workorders/{id}/status` - Update work order status.
+  - **Search Endpoints**:
+    - `GET /workorders/status/{status}` - Retrieve work orders by status.
+    - `GET /workorders/technician/{technicianId}` - Retrieve work orders by technician ID.
 
 #### 2. Technician Service
 
@@ -37,6 +40,9 @@ Each microservice is responsible for managing its specific domain and communicat
   - `POST /technicians` - Create a new technician.
   - `PUT /technicians/{id}` - Update technician details.
   - `PATCH /technicians/{id}/claim` - Claim equipment.
+  - **Search Endpoints**:
+    - `GET /technicians/role/{role}` - Retrieve technicians by role.
+    - `GET /technicians/location/{location}` - Retrieve technicians by location.
 
 #### 3. Maintenance Report Service
 
@@ -46,6 +52,9 @@ Each microservice is responsible for managing its specific domain and communicat
   - `GET /maintenance-reports` - Retrieve maintenance reports.
   - `POST /maintenance-reports` - Submit a new maintenance report.
   - `PUT /maintenance-reports/{id}` - Update a maintenance report.
+  - **Search Endpoints**:
+    - `GET /maintenance-reports/tower/{towerId}` - Retrieve reports by tower ID.
+    - `GET /maintenance-reports/priority/{priority}` - Retrieve reports by priority.
 
 #### 4. Equipment Service
 
@@ -56,6 +65,9 @@ Each microservice is responsible for managing its specific domain and communicat
   - `POST /equipments` - Add new equipment.
   - `PUT /equipments/{id}` - Update equipment details.
   - `PATCH /equipments/{id}/claim` - Claim equipment.
+  - **Search Endpoints**:
+    - `GET /equipments/name/{name}` - Retrieve equipment by name.
+    - `GET /equipments/manufacture/{manufacture}` - Retrieve equipment by manufacture.
 
 #### 5. Tower Service
 
@@ -65,6 +77,9 @@ Each microservice is responsible for managing its specific domain and communicat
   - `GET /towers` - Retrieve tower details.
   - `POST /towers` - Add a new tower.
   - `PUT /towers/{id}` - Update tower details.
+  - **Search Endpoints**:
+    - `GET /towers/location/{location}` - Retrieve towers by location.
+    - `GET /towers/status/{status}` - Retrieve towers by status.
 
 ### Database Schema
 
