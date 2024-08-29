@@ -20,9 +20,9 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        User user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    @GetMapping("/{user_id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long user_id) {
+        User user = userService.getUserById(user_id).orElseThrow(() -> new RuntimeException("User not found"));
         return ResponseEntity.ok(user);
     }
 
@@ -31,15 +31,15 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User userDetails) {
-        User updatedUser = userService.updateUser(userId, userDetails);
+    @PutMapping("/{user_id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long user_id, @RequestBody User userDetails) {
+        User updatedUser = userService.updateUser(user_id, userDetails);
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
+    @DeleteMapping("/{user_id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long user_id) {
+        userService.deleteUser(user_id);
         return ResponseEntity.noContent().build();
     }
 }
