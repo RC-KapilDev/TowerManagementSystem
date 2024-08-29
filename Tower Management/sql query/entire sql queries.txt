@@ -1,0 +1,357 @@
+create a sequence for id to start with 400001
+
+CREATE SEQUENCE tower_id_seq 
+START WITH 400001 
+INCREMENT BY 1 
+MINVALUE 400001 
+MAXVALUE 999999;  -- This ensures it stays a 6-digit number
+
+
+-- Step 1: Create an ENUM type for status in PostgreSQL
+CREATE TYPE tower_status AS ENUM ('active', 'inactive', 'under-maintenance');
+
+-- Step 2: Create the table using the ENUM type for the status column
+CREATE TABLE tower_info ( 
+    tower_id INTEGER PRIMARY KEY DEFAULT nextval('tower_id_seq'), -- Use the sequence for tower_id
+    location TEXT,
+    height DOUBLE PRECISION,
+    type TEXT,
+    status tower_status, 
+    pincode INTEGER,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    power_reading INTEGER DEFAULT 0, -- Default value for power_reading
+    fuel_reading NUMERIC DEFAULT 0, -- Default value for fuel_reading
+    created_at TIMESTAMP DEFAULT NOW(), -- Automatically set to the current timestamp
+    updated_at TIMESTAMP DEFAULT NOW(), -- Will be updated via a trigger
+    last_maintained DATE,
+    deleted_status BOOLEAN DEFAULT FALSE -- Default value is false
+);
+
+-- Step 3: Create a trigger function to automatically update the updated_at column
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Step 4: Create a trigger that calls the above function before any update on the table
+CREATE TRIGGER update_tower_info_updated_at
+BEFORE UPDATE ON tower_info
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+
+
+INSERT INTO tower_info (location, height, type, status, pincode, latitude, longitude, last_maintained)
+VALUES ('Chennai', 150.5, '4G', 'active', 600001, 13.0827, 80.2707, '2024-08-01');
+
+
+
+UPDATE tower_info 
+SET power_reading = 1200, fuel_reading = 500.25, status = 'under-maintenance'
+WHERE tower_id = 1;
+
+
+
+
+SELECT * FROM tower_info WHERE tower_id = 1;
+
+
+Step 1: Create a Sequence for workorder_id
+
+CREATE SEQUENCE workorder_id_seq 
+START WITH 200 
+INCREMENT BY 1 
+MINVALUE 200 
+MAXVALUE 400000;  -- This ensures it stays within the range of 200 to 400000
+
+
+Step 2: Create an ENUM Type for status
+
+CREATE TYPE workorder_status AS ENUM ('pending', 'completed');
+
+
+
+Step 3: Create the work_order Table
+
+
+CREATE TABLE work_order (
+    workorder_id INTEGER PRIMARY KEY DEFAULT nextval('workorder_id_seq'),  -- Auto-generated ID within the specified range
+    tower_id INTEGER REFERENCES tower_info(tower_id) ON DELETE CASCADE,  -- Foreign key from tower_info table
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,  -- Foreign key from technician table
+    task_description TEXT,
+    scheduled_date DATE DEFAULT CURRENT_DATE,  -- Automatically set to the current date
+    status workorder_status DEFAULT 'pending',  -- Default value is 'pending'
+    completed_date DATE DEFAULT NULL,  -- Default value is NULL
+    created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set to the current timestamp
+    deleted_status BOOLEAN DEFAULT FALSE,  -- For soft delete
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+
+
+Step 4: Test Inserting a Record
+
+INSERT INTO work_order (tower_id, user_id, task_description)
+VALUES (400001, 500001, 'Routine maintenance check');
+
+
+Step 5: Verify the Record
+SELECT * FROM work_order WHERE workorder_id = 200;
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION update_work_order_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at := NOW();  -- Set updated_at to the current timestamp
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE TRIGGER trg_update_work_order_updated_at
+BEFORE UPDATE ON work_order
+FOR EACH ROW
+EXECUTE FUNCTION update_work_order_updated_at();
+
+
+
+
+
+
+UPDATE work_order
+SET task_description = 'New task description'
+WHERE workorder_id = 200;
+
+
+
+Step 1: Create a Sequence for user_id
+
+CREATE SEQUENCE user_id_seq 
+START WITH 500001 
+INCREMENT BY 1 
+MINVALUE 500001 
+MAXVALUE 599999;
+
+
+
+Step 2: Create an ENUM Type for role
+
+CREATE TYPE user_role AS ENUM (
+    'Junior Tower Technician', 
+    'Senior Tower Technician', 
+    'Field Technician',
+    'Admin'
+);
+
+
+Step 3: Create the user Table
+
+
+
+CREATE TABLE users (
+    user_id INTEGER PRIMARY KEY DEFAULT nextval('user_id_seq'),
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL CONSTRAINT chk_email_format CHECK (email ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$'),
+    specialisation TEXT,
+    location TEXT,
+    pincode INTEGER,
+    role user_role,
+    active_status BOOLEAN DEFAULT TRUE,
+    deleted_status BOOLEAN DEFAULT FALSE,
+    username TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    password TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+
+
+
+Step 4: Create a Function to Auto-Generate username and password
+
+CREATE OR REPLACE FUNCTION generate_username_and_password()
+RETURNS TRIGGER AS $$
+DECLARE
+    random_suffix CHAR(3);
+    random_number CHAR(4);
+    base_name TEXT;
+BEGIN
+    -- Extract first 4 characters of the name
+    base_name := LOWER(LEFT(NEW.name, 4));
+
+    -- Generate a random 3-character suffix for username
+    random_suffix := substr(md5(random()::text), 1, 3);
+
+    -- Generate a random 4-digit number for password
+    random_number := substr(md5(random()::text), 1, 4);
+
+    -- Set the username and password
+    NEW.username := base_name || random_suffix;
+    NEW.password := base_name || random_number;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+Step 5: Create a Trigger to Call the Function Before Inserting a Record
+
+CREATE TRIGGER generate_username_password
+BEFORE INSERT ON users
+FOR EACH ROW
+EXECUTE FUNCTION generate_username_and_password();
+
+
+
+Step 6: Test Inserting a Record
+
+INSERT INTO users (name, email, specialisation, location, pincode, role)
+VALUES ('John Doe', 'john.doe@example.com', 'Electrical Engineering', 'Chennai', 600001, 'Field Technician');
+
+
+
+
+
+Step 7: Verify the Record
+
+SELECT * FROM users WHERE user_id = 500001;
+
+
+
+8. Create or Update the Function to Set updated_at
+
+
+CREATE OR REPLACE FUNCTION update_user_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at := NOW();  -- Set updated_at to the current timestamp
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+Trigger to Call update_user_updated_at:
+
+
+CREATE TRIGGER update_user_updated_at
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION update_user_updated_at();
+
+
+9. Update Email (for testing)
+
+
+UPDATE users
+SET email = 'new.email@example.com'
+WHERE user_id = 500001;
+
+
+
+
+Step 1: Create a Sequence for maintenance_id
+
+
+CREATE SEQUENCE maintenance_id_seq 
+START WITH 7000000 
+INCREMENT BY 1 
+MINVALUE 7000000 
+MAXVALUE 7999999;  -- This ensures it stays within the range of 7-digit numbers
+
+Step 2: Create an ENUM Type for priority
+
+CREATE TYPE maintenance_priority AS ENUM ('lowest', 'moderate', 'high');
+
+
+
+Step 3: Create the maintenance_report Table
+
+CREATE TABLE maintenance_report (
+    maintenance_id INTEGER PRIMARY KEY DEFAULT nextval('maintenance_id_seq'),  -- Auto-generated ID within the specified range
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,  -- Foreign key from technician table
+    workorder_id INTEGER REFERENCES work_order(workorder_id) ON DELETE CASCADE,  -- Foreign key from work_order table
+    tower_id INTEGER REFERENCES tower_info(tower_id) ON DELETE CASCADE,  -- Foreign key from tower_info table
+    equipment_required TEXT,
+    issues_faced TEXT,
+    priority maintenance_priority,  -- Using the ENUM type for priority
+    created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set to the current timestamp
+    deleted_status BOOLEAN DEFAULT FALSE  -- For soft delete
+);
+
+
+
+Step 4: Test Inserting a Record
+
+INSERT INTO maintenance_report (user_id, workorder_id, tower_id, equipment_required, issues_faced, priority)
+VALUES (500001, 200, 400001, 'Spare parts', 'Signal failure', 'high');
+
+
+Step 5: Verify the Record
+
+SELECT * FROM maintenance_report WHERE maintenance_id = 7000000;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Step 1: Create a Sequence for equipment_id
+
+
+CREATE SEQUENCE equipment_id_seq 
+START WITH 80000000 
+INCREMENT BY 1 
+MINVALUE 80000000 
+MAXVALUE 89999999;  -- This ensures it stays within the range of 8-digit numbers
+
+
+Step 2: Create the equipment Table
+sql
+
+CREATE TABLE equipment (
+    equipment_id INTEGER PRIMARY KEY DEFAULT nextval('equipment_id_seq'),  -- Auto-generated ID within the specified range
+    workorder_id INTEGER REFERENCES work_order(workorder_id) ON DELETE CASCADE,  -- Foreign key from work_order table
+    tower_id INTEGER REFERENCES tower_info(tower_id) ON DELETE CASCADE,  -- Foreign key from tower_info table
+    serial_number INTEGER,
+    manufacture TEXT,
+    model TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set to the current timestamp
+    equipment_name TEXT,
+    deleted_status BOOLEAN DEFAULT FALSE,  -- For soft delete
+    claimed BOOLEAN DEFAULT FALSE  -- Indicates if the technician claimed the equipment
+);
+
+
+Step 3: Test Inserting a Record
+
+INSERT INTO equipment (workorder_id, tower_id, serial_number, manufacture, model, equipment_name)
+VALUES (200, 400001, 123456789, 'Acme Corp', 'Model X', 'Signal Booster');
+
+
+
+Step 4: Verify the Record
+SELECT * FROM equipment WHERE equipment_id = 80000000;
+
+
+ give me a notification table where the users can send and recieve email to each other 

@@ -1,0 +1,38 @@
+Step 1: Create a Sequence for equipment_id
+
+
+CREATE SEQUENCE equipment_id_seq 
+START WITH 80000000 
+INCREMENT BY 1 
+MINVALUE 80000000 
+MAXVALUE 89999999;  -- This ensures it stays within the range of 8-digit numbers
+
+
+Step 2: Create the equipment Table
+sql
+
+CREATE TABLE equipment (
+    equipment_id INTEGER PRIMARY KEY DEFAULT nextval('equipment_id_seq'),  -- Auto-generated ID within the specified range
+    workorder_id INTEGER REFERENCES work_order(workorder_id) ON DELETE CASCADE,  -- Foreign key from work_order table
+    tower_id INTEGER REFERENCES tower_info(tower_id) ON DELETE CASCADE,  -- Foreign key from tower_info table
+    serial_number INTEGER,
+    manufacture TEXT,
+    model TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set to the current timestamp
+    equipment_name TEXT,
+    deleted_status BOOLEAN DEFAULT FALSE,  -- For soft delete
+    claimed BOOLEAN DEFAULT FALSE  -- Indicates if the technician claimed the equipment
+);
+
+
+Step 3: Test Inserting a Record
+
+INSERT INTO equipment (workorder_id, tower_id, serial_number, manufacture, model, equipment_name)
+VALUES (200, 400001, 123456789, 'Acme Corp', 'Model X', 'Signal Booster');
+
+
+
+Step 4: Verify the Record
+SELECT * FROM equipment WHERE equipment_id = 80000000;
+
+

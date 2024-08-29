@@ -1,0 +1,33 @@
+-- Step 1: Create the notification table
+CREATE TABLE notifications (
+    notification_id INTEGER PRIMARY KEY DEFAULT nextval('notification_id_seq'),  -- Auto-generated ID
+    sender_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,  -- Foreign key to users table
+    receiver_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,  -- Foreign key to users table
+    subject TEXT NOT NULL,  -- Subject of the email
+    message TEXT NOT NULL,  -- Body of the email
+    sent_at TIMESTAMP DEFAULT NOW(),  -- Automatically set to the current timestamp
+    read_status BOOLEAN DEFAULT FALSE,  -- Indicates if the notification has been read
+    deleted_status BOOLEAN DEFAULT FALSE  -- For soft delete
+);
+
+-- Step 2: Create a sequence for notification_id
+CREATE SEQUENCE notification_id_seq 
+START WITH 1 
+INCREMENT BY 1 
+MINVALUE 1;
+
+-- Step 3: Insert a sample notification
+INSERT INTO notifications (sender_id, receiver_id, subject, message)
+VALUES (500001, 500002, 'Meeting Reminder', 'Dont forget about the meeting at 3 PM.');
+
+
+
+
+
+
+SELECT notification_id, sender_id, subject, message, sent_at, read_status
+FROM notifications
+WHERE receiver_id = 500002
+  AND deleted_status = FALSE
+ORDER BY sent_at DESC;
+

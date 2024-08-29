@@ -1,0 +1,110 @@
+To implement access control and perform operations based on user roles (admin and technician) in PostgreSQL, you'll need to set up roles and permissions, and then structure your SQL queries accordingly.
+
+### 1. Define User Roles
+
+#### Create Roles
+1. **Admin Role**:
+   ```sql
+   CREATE ROLE admin_role;
+   ```
+
+2. **Technician Role**:
+   ```sql
+   CREATE ROLE technician_role;
+   ```
+
+#### Grant Privileges to Roles
+1. **Admin Role**:
+   ```sql
+   GRANT ALL PRIVILEGES ON TABLE work_order TO admin_role;
+   GRANT ALL PRIVILEGES ON TABLE maintenance_report TO admin_role;
+   GRANT ALL PRIVILEGES ON TABLE equipment TO admin_role;
+   GRANT ALL PRIVILEGES ON TABLE technician TO admin_role;
+   ```
+
+2. **Technician Role**:
+   ```sql
+   GRANT SELECT, UPDATE ON TABLE work_order TO technician_role;
+   GRANT INSERT ON TABLE maintenance_report TO technician_role;
+   GRANT SELECT, UPDATE ON TABLE equipment TO technician_role;
+   ```
+
+### 2. Set Up User Access
+
+#### Create Users and Assign Roles
+1. **Create Admin User**:
+   ```sql
+   CREATE USER admin_user WITH PASSWORD 'admin_password';
+   GRANT admin_role TO admin_user;
+   ```
+
+2. **Create Technician User**:
+   ```sql
+   CREATE USER technician_user WITH PASSWORD 'technician_password';
+   GRANT technician_role TO technician_user;
+   ```
+
+### 3. SQL Queries for Operations
+
+#### 1. **Technician Viewing and Updating Work Orders**
+Technicians can view work orders and update the status.
+
+**Viewing Work Orders**:
+```sql
+-- Technicians can view their assigned work orders
+SELECT * FROM work_order WHERE technician_id = <technician_id>;
+```
+
+**Updating Work Order Status**:
+```sql
+-- Technicians update the status of a work order
+UPDATE work_order
+SET status = 'completed', updated_at = NOW()
+WHERE workorder_id = <workorder_id> AND technician_id = <technician_id>;
+```
+
+#### 2. **Technician Submitting Maintenance Reports**
+Technicians submit maintenance reports with issues they face.
+
+**Inserting Maintenance Report**:
+```sql
+-- Technicians submit a maintenance report
+INSERT INTO maintenance_report (technician_id, workorder_id, tower_id, equipment_required, issues_faced, priority)
+VALUES (<technician_id>, <workorder_id>, <tower_id>, '<equipment_required>', '<issues_faced>', '<priority>');
+```
+
+#### 3. **Admin Adding Equipment and Technicians Claiming Equipment**
+Admins add new equipment and technicians claim it.
+
+**Admin Adding Equipment**:
+```sql
+-- Admin adds new equipment
+INSERT INTO equipment (workorder_id, tower_id, serial_number, manufacture, model, equipment_name)
+VALUES (<workorder_id>, <tower_id>, <serial_number>, '<manufacture>', '<model>', '<equipment_name>');
+```
+
+**Technician Claiming Equipment**:
+```sql
+-- Technician claims the equipment
+UPDATE equipment
+SET claimed = TRUE, updated_at = NOW()
+WHERE equipment_id = <equipment_id> AND claimed = FALSE;
+```
+
+#### 4. **Admin Updating Work Order Status After Equipment Claim**
+Admins can update the status of the work order after equipment is claimed.
+
+**Admin Updating Work Order Status**:
+```sql
+-- Admin updates the status of a work order after equipment is claimed
+UPDATE work_order
+SET status = 'completed', updated_at = NOW()
+WHERE workorder_id = <workorder_id>;
+```
+
+### Summary
+
+- **Roles and Permissions**: Admins have full access while technicians have limited access.
+- **SQL Queries**: Operations are based on roles—viewing and updating work orders, submitting maintenance reports, adding and claiming equipment.
+
+**Note:** Ensure to replace placeholders like `<technician_id>`, `<workorder_id>`, etc., with actual values when executing the queries. Additionally, manage permissions and roles in a secure and controlled manner to prevent unauthorized access.

@@ -1,0 +1,65 @@
+create a sequence for id to start with 400001
+
+CREATE SEQUENCE tower_id_seq 
+START WITH 400001 
+INCREMENT BY 1 
+MINVALUE 400001 
+MAXVALUE 999999;  -- This ensures it stays a 6-digit number
+
+
+-- Step 1: Create an ENUM type for status in PostgreSQL
+CREATE TYPE tower_status AS ENUM ('active', 'inactive', 'under-maintenance');
+
+-- Step 2: Create the table using the ENUM type for the status column
+CREATE TABLE tower_info ( 
+    tower_id INTEGER PRIMARY KEY DEFAULT nextval('tower_id_seq'), -- Use the sequence for tower_id
+    location TEXT,
+    height DOUBLE PRECISION,
+    type TEXT,
+    status tower_status, 
+    pincode INTEGER,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    power_reading INTEGER DEFAULT 0, -- Default value for power_reading
+    fuel_reading NUMERIC DEFAULT 0, -- Default value for fuel_reading
+    created_at TIMESTAMP DEFAULT NOW(), -- Automatically set to the current timestamp
+    updated_at TIMESTAMP DEFAULT NOW(), -- Will be updated via a trigger
+    last_maintained DATE,
+    deleted_status BOOLEAN DEFAULT FALSE -- Default value is false
+);
+
+-- Step 3: Create a trigger function to automatically update the updated_at column
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Step 4: Create a trigger that calls the above function before any update on the table
+CREATE TRIGGER update_tower_info_updated_at
+BEFORE UPDATE ON tower_info
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+
+
+INSERT INTO tower_info (location, height, type, status, pincode, latitude, longitude, last_maintained)
+VALUES ('Chennai', 150.5, '4G', 'active', 600001, 13.0827, 80.2707, '2024-08-01');
+
+
+
+UPDATE tower_info 
+SET power_reading = 1200, fuel_reading = 500.25, status = 'under-maintenance'
+WHERE tower_id = 1;
+
+
+
+
+SELECT * FROM tower_info WHERE tower_id = 1;
+
+
+
+
+

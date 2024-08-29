@@ -1,0 +1,41 @@
+Step 1: Create a Sequence for maintenance_id
+
+
+CREATE SEQUENCE maintenance_id_seq 
+START WITH 7000000 
+INCREMENT BY 1 
+MINVALUE 7000000 
+MAXVALUE 7999999;  -- This ensures it stays within the range of 7-digit numbers
+
+Step 2: Create an ENUM Type for priority
+
+CREATE TYPE maintenance_priority AS ENUM ('lowest', 'moderate', 'high');
+
+
+
+Step 3: Create the maintenance_report Table
+
+CREATE TABLE maintenance_report (
+    maintenance_id INTEGER PRIMARY KEY DEFAULT nextval('maintenance_id_seq'),  -- Auto-generated ID within the specified range
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,  -- Foreign key from technician table
+    workorder_id INTEGER REFERENCES work_order(workorder_id) ON DELETE CASCADE,  -- Foreign key from work_order table
+    tower_id INTEGER REFERENCES tower_info(tower_id) ON DELETE CASCADE,  -- Foreign key from tower_info table
+    equipment_required TEXT,
+    issues_faced TEXT,
+    priority maintenance_priority,  -- Using the ENUM type for priority
+    created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set to the current timestamp
+    deleted_status BOOLEAN DEFAULT FALSE  -- For soft delete
+);
+
+
+
+Step 4: Test Inserting a Record
+
+INSERT INTO maintenance_report (user_id, workorder_id, tower_id, equipment_required, issues_faced, priority)
+VALUES (500001, 200, 400001, 'Spare parts', 'Signal failure', 'high');
+
+
+Step 5: Verify the Record
+
+SELECT * FROM maintenance_report WHERE maintenance_id = 7000000;
+

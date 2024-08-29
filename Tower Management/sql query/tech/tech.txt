@@ -1,0 +1,130 @@
+Step 1: Create a Sequence for user_id
+
+CREATE SEQUENCE user_id_seq 
+START WITH 500001 
+INCREMENT BY 1 
+MINVALUE 500001 
+MAXVALUE 599999;
+
+
+
+Step 2: Create an ENUM Type for role
+
+CREATE TYPE user_role AS ENUM (
+    'Junior Tower Technician', 
+    'Senior Tower Technician', 
+    'Field Technician',
+    'Admin'
+);
+
+
+Step 3: Create the user Table
+
+
+
+CREATE TABLE users (
+    user_id INTEGER PRIMARY KEY DEFAULT nextval('user_id_seq'),
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL CONSTRAINT chk_email_format CHECK (email ~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$'),
+    specialisation TEXT,
+    location TEXT,
+    pincode INTEGER,
+    role user_role,
+    active_status BOOLEAN DEFAULT TRUE,
+    deleted_status BOOLEAN DEFAULT FALSE,
+    username TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    password TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+
+
+
+Step 4: Create a Function to Auto-Generate username and password
+
+CREATE OR REPLACE FUNCTION generate_username_and_password()
+RETURNS TRIGGER AS $$
+DECLARE
+    random_suffix CHAR(3);
+    random_number CHAR(4);
+    base_name TEXT;
+BEGIN
+    -- Extract first 4 characters of the name
+    base_name := LOWER(LEFT(NEW.name, 4));
+
+    -- Generate a random 3-character suffix for username
+    random_suffix := substr(md5(random()::text), 1, 3);
+
+    -- Generate a random 4-digit number for password
+    random_number := substr(md5(random()::text), 1, 4);
+
+    -- Set the username and password
+    NEW.username := base_name || random_suffix;
+    NEW.password := base_name || random_number;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+Step 5: Create a Trigger to Call the Function Before Inserting a Record
+
+CREATE TRIGGER generate_username_password
+BEFORE INSERT ON users
+FOR EACH ROW
+EXECUTE FUNCTION generate_username_and_password();
+
+
+
+Step 6: Test Inserting a Record
+
+INSERT INTO users (name, email, specialisation, location, pincode, role)
+VALUES ('John Doe', 'john.doe@example.com', 'Electrical Engineering', 'Chennai', 600001, 'Field Technician');
+
+
+
+
+
+Step 7: Verify the Record
+
+SELECT * FROM users WHERE user_id = 500001;
+
+
+
+8. Create or Update the Function to Set updated_at
+
+
+CREATE OR REPLACE FUNCTION update_user_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at := NOW();  -- Set updated_at to the current timestamp
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+Trigger to Call update_user_updated_at:
+
+
+CREATE TRIGGER update_user_updated_at
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION update_user_updated_at();
+
+
+9. Update Email (for testing)
+
+
+UPDATE users
+SET email = 'new.email@example.com'
+WHERE user_id = 500001;
+
+
+
+
+
+
+

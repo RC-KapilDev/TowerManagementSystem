@@ -1,0 +1,114 @@
+Step 1: Create a Sequence for workorder_id
+
+CREATE SEQUENCE workorder_id_seq 
+START WITH 200 
+INCREMENT BY 1 
+MINVALUE 200 
+MAXVALUE 400000;  -- This ensures it stays within the range of 200 to 400000
+
+
+Step 2: Create an ENUM Type for status
+
+CREATE TYPE workorder_status AS ENUM ('pending', 'completed');
+
+
+
+Step 3: Create the work_order Table
+
+
+CREATE TABLE work_order (
+    workorder_id INTEGER PRIMARY KEY DEFAULT nextval('workorder_id_seq'),  -- Auto-generated ID within the specified range
+    tower_id INTEGER REFERENCES tower_info(tower_id) ON DELETE CASCADE,  -- Foreign key from tower_info table
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,  -- Foreign key from technician table
+    task_description TEXT,
+    scheduled_date DATE DEFAULT CURRENT_DATE,  -- Automatically set to the current date
+    status workorder_status DEFAULT 'pending',  -- Default value is 'pending'
+    completed_date TIMESTAMP DEFAULT NULL,  -- Default value is NULL
+    created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set to the current timestamp
+    deleted_status BOOLEAN DEFAULT FALSE,  -- For soft delete
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+
+
+Step 4: Test Inserting a Record
+
+INSERT INTO work_order (tower_id, user_id, task_description)
+VALUES (400001, 500001, 'Routine maintenance check');
+
+
+Step 5: Verify the Record
+SELECT * FROM work_order WHERE workorder_id = 200;
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION update_work_order_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at := NOW();  -- Set updated_at to the current timestamp
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE TRIGGER trg_update_work_order_updated_at
+BEFORE UPDATE ON work_order
+FOR EACH ROW
+EXECUTE FUNCTION update_work_order_updated_at();
+
+
+
+
+
+
+UPDATE work_order
+SET task_description = 'New task description'
+WHERE workorder_id = 200;
+
+
+
+
+
+CREATE OR REPLACE FUNCTION update_last_maintained()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update the last_maintained field in tower_info when completed_date changes
+    UPDATE tower_info
+    SET last_maintained = NEW.completed_date
+    WHERE tower_id = NEW.tower_id;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE TRIGGER work_order_completed_date_update
+AFTER UPDATE OF completed_date ON work_order
+FOR EACH ROW
+EXECUTE FUNCTION update_last_maintained();
+
+
+
+
+-- Example insert into work_order to test
+INSERT INTO work_order (workorder_id, tower_id, completed_date)
+VALUES (1, 400001, '2024-08-15');
+
+-- Example update in work_order to trigger last_maintained update
+UPDATE work_order
+SET completed_date = '2024-08-20'
+WHERE workorder_id = 1;
+
+-- Verify the update
+SELECT * FROM tower_info WHERE tower_id = 400001;
+
+
+
+
+
+
