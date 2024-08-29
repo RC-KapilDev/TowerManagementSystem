@@ -46,8 +46,8 @@ public class UserService {
         user.setLocation(userDetails.getLocation());
         user.setPincode(userDetails.getPincode());
         user.setRole(userDetails.getRole());
-        user.setActiveStatus(userDetails.getActiveStatus());
-        user.setDeletedStatus(userDetails.getDeletedStatus());
+        user.setActive_Status(userDetails.getActive_Status());
+        user.setDeleted_Status(userDetails.getDeleted_Status());
         user.setName(userDetails.getName());
 
         return userRepository.save(user);
