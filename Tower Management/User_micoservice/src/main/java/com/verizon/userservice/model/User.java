@@ -28,7 +28,9 @@ public class User {
     private Boolean deletedStatus;
     private String name;
     @CreationTimestamp
+    @JsonIgnore
     private LocalDateTime createdAt;
     @UpdateTimestamp
+    @JsonIgnore
     private LocalDateTime updatedAt;
 }
