@@ -20,8 +20,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Long userId) {
-        return userRepository.findById(userId);
+    public Optional<User> getUserById(Long user_id) {
+        return userRepository.findById(user_id);
     }
 
     public User createUser(User user) {
@@ -38,7 +38,7 @@ public class UserService {
         return RandomStringUtils.randomAlphanumeric(8);
     }
 
-    public User updateUser(Long userId, User userDetails) {
+    public User updateUser(Long user_id, User userDetails) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         user.setEmail(userDetails.getEmail());
@@ -53,8 +53,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public void deleteUser(Long user_id) {
+        User user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(user);
     }
 }
