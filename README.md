@@ -1,15 +1,19 @@
+Certainly! Here’s the updated README file reflecting the changes from `technician` to `users` and `user_id`:
+
+---
+
 # Telecom Tower Management System
 
 ## Overview
 
-The Telecom Tower Management System is designed to streamline the management of telecom towers, including work orders, technicians, maintenance reports, and equipment. This system is built using a microservices architecture to ensure scalability, maintainability, and flexibility.
+The Telecom Tower Management System is designed to streamline the management of telecom towers, including work orders, users, maintenance reports, and equipment. This system is built using a microservices architecture to ensure scalability, maintainability, and flexibility.
 
 ## Architecture
 
 The system is composed of the following microservices:
 
 1. **Work Order Service**
-2. **Technician Service**
+2. **User Service**
 3. **Maintenance Report Service**
 4. **Equipment Service**
 5. **Tower Service**
@@ -29,20 +33,20 @@ Each microservice is responsible for managing its specific domain and communicat
   - `PATCH /workorders/{id}/status` - Update work order status.
   - **Search Endpoints**:
     - `GET /workorders/status/{status}` - Retrieve work orders by status.
-    - `GET /workorders/technician/{technicianId}` - Retrieve work orders by technician ID.
+    - `GET /workorders/user/{userId}` - Retrieve work orders by user ID.
 
-#### 2. Technician Service
+#### 2. User Service
 
 - **Responsibilities**:
-  - Manage technician information and equipment claims.
+  - Manage user information and equipment claims.
 - **Endpoints**:
-  - `GET /technicians` - Retrieve technician information.
-  - `POST /technicians` - Create a new technician.
-  - `PUT /technicians/{id}` - Update technician details.
-  - `PATCH /technicians/{id}/claim` - Claim equipment.
+  - `GET /users` - Retrieve user information.
+  - `POST /users` - Create a new user.
+  - `PUT /users/{id}` - Update user details.
+  - `PATCH /users/{id}/claim` - Claim equipment.
   - **Search Endpoints**:
-    - `GET /technicians/role/{role}` - Retrieve technicians by role.
-    - `GET /technicians/location/{location}` - Retrieve technicians by location.
+    - `GET /users/role/{role}` - Retrieve users by role.
+    - `GET /users/location/{location}` - Retrieve users by location.
 
 #### 3. Maintenance Report Service
 
@@ -87,15 +91,15 @@ The system uses PostgreSQL as the database. Here’s a summary of the tables and
 
 - **Work Order Table**:
   - `workorder_id` (INTEGER, starts from 200 to 400000)
-  - Foreign Keys: `tower_id`, `technician_id`
+  - Foreign Keys: `tower_id`, `user_id`
   
-- **Technician Table**:
-  - `technician_id` (INTEGER, starts from 500001 to 599999)
+- **User Table**:
+  - `user_id` (INTEGER, starts from 500001 to 599999)
   - Other columns include `role`, `active_status`, `name`, `email`, `specialisation`, `location`, `pincode`, `deleted_status`, `username`, `password`
 
 - **Maintenance Report Table**:
   - `maintenance_id` (INTEGER, starts and ends with 7 digits)
-  - Foreign Keys: `technician_id`, `workorder_id`, `tower_id`
+  - Foreign Keys: `user_id`, `workorder_id`, `tower_id`
 
 - **Equipment Table**:
   - `equipment_id` (INTEGER, starts with 8 digits)
@@ -106,22 +110,22 @@ The system uses PostgreSQL as the database. Here’s a summary of the tables and
 
 ### App Flow
 
-1. **Technician Operations**:
-   - Technicians log in and view assigned work orders.
-   - Technicians update work order status and submit maintenance reports.
-   - Technicians claim equipment assigned to them.
+1. **User Operations**:
+   - Users log in and view assigned work orders.
+   - Users update work order status and submit maintenance reports.
+   - Users claim equipment assigned to them.
 
 2. **Admin Operations**:
-   - Admins log in and manage work orders, equipment, and technician details.
+   - Admins log in and manage work orders, equipment, and user details.
    - Admins add new equipment and update work orders after equipment claims.
 
 ### Access Control
 
 - **Admin**:
   - Full access to all microservices.
-  - Can add equipment, update work orders, manage technician details.
+  - Can add equipment, update work orders, manage user details.
 
-- **Technician**:
+- **User**:
   - Can view work orders assigned to them.
   - Can update work order status and submit maintenance reports.
   - Can claim equipment.
@@ -151,3 +155,4 @@ The system uses PostgreSQL as the database. Here’s a summary of the tables and
 
 This Telecom Tower Management System is designed to be modular and scalable. Each microservice handles a specific aspect of the system, making it easier to manage and extend. Follow the architecture and flow outlined here to build and deploy your system effectively.
 
+---
