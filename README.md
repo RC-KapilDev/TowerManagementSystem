@@ -1,4 +1,4 @@
-Certainly! Here’s the updated README file reflecting the changes from `technician` to `users` and `user_id`:
+Certainly! Here’s the updated README file with the **Notification Service** added, including its endpoints:
 
 ---
 
@@ -6,7 +6,7 @@ Certainly! Here’s the updated README file reflecting the changes from `technic
 
 ## Overview
 
-The Telecom Tower Management System is designed to streamline the management of telecom towers, including work orders, users, maintenance reports, and equipment. This system is built using a microservices architecture to ensure scalability, maintainability, and flexibility.
+The Telecom Tower Management System is designed to streamline the management of telecom towers, including work orders, users, maintenance reports, equipment, and notifications. This system is built using a microservices architecture to ensure scalability, maintainability, and flexibility.
 
 ## Architecture
 
@@ -17,6 +17,7 @@ The system is composed of the following microservices:
 3. **Maintenance Report Service**
 4. **Equipment Service**
 5. **Tower Service**
+6. **Notification Service**
 
 Each microservice is responsible for managing its specific domain and communicates with other services as needed.
 
@@ -38,12 +39,11 @@ Each microservice is responsible for managing its specific domain and communicat
 #### 2. User Service
 
 - **Responsibilities**:
-  - Manage user information and equipment claims.
+  - Manage user information and interactions.
 - **Endpoints**:
   - `GET /users` - Retrieve user information.
   - `POST /users` - Create a new user.
   - `PUT /users/{id}` - Update user details.
-  - `PATCH /users/{id}/claim` - Claim equipment.
   - **Search Endpoints**:
     - `GET /users/role/{role}` - Retrieve users by role.
     - `GET /users/location/{location}` - Retrieve users by location.
@@ -85,6 +85,19 @@ Each microservice is responsible for managing its specific domain and communicat
     - `GET /towers/location/{location}` - Retrieve towers by location.
     - `GET /towers/status/{status}` - Retrieve towers by status.
 
+#### 6. Notification Service
+
+- **Responsibilities**:
+  - Manage notifications between users, including sending, receiving, and listing notifications.
+- **Endpoints**:
+  - `GET /notifications` - Retrieve notifications for the authenticated user.
+  - `POST /notifications` - Send a new notification to a user.
+  - `PUT /notifications/{id}` - Update a notification (e.g., mark as read).
+  - `DELETE /notifications/{id}` - Delete a notification.
+  - **Search Endpoints**:
+    - `GET /notifications/user/{userId}` - Retrieve notifications for a specific user.
+    - `GET /notifications/status/{status}` - Retrieve notifications by status (e.g., read/unread).
+
 ### Database Schema
 
 The system uses PostgreSQL as the database. Here’s a summary of the tables and their primary keys:
@@ -108,27 +121,38 @@ The system uses PostgreSQL as the database. Here’s a summary of the tables and
 - **Tower Table**:
   - `tower_id` (SERIAL, starting from a specified number)
 
+- **Notification Table**:
+  - `notification_id` (SERIAL, unique identifier for notifications)
+  - `sender_id` (INTEGER, references `user_id`)
+  - `receiver_id` (INTEGER, references `user_id`)
+  - `message` (TEXT, content of the notification)
+  - `status` (ENUM, can be 'sent', 'delivered', 'read')
+  - `created_at` (TIMESTAMP, time when the notification was created)
+
 ### App Flow
 
 1. **User Operations**:
    - Users log in and view assigned work orders.
    - Users update work order status and submit maintenance reports.
    - Users claim equipment assigned to them.
+   - Users send and receive notifications.
 
 2. **Admin Operations**:
    - Admins log in and manage work orders, equipment, and user details.
    - Admins add new equipment and update work orders after equipment claims.
+   - Admins can send notifications to users.
 
 ### Access Control
 
 - **Admin**:
   - Full access to all microservices.
-  - Can add equipment, update work orders, manage user details.
+  - Can add equipment, update work orders, manage user details, and send notifications.
 
 - **User**:
   - Can view work orders assigned to them.
   - Can update work order status and submit maintenance reports.
   - Can claim equipment.
+  - Can send and receive notifications.
 
 ### Communication Between Services
 
@@ -156,3 +180,5 @@ The system uses PostgreSQL as the database. Here’s a summary of the tables and
 This Telecom Tower Management System is designed to be modular and scalable. Each microservice handles a specific aspect of the system, making it easier to manage and extend. Follow the architecture and flow outlined here to build and deploy your system effectively.
 
 ---
+
+Feel free to modify any additional details as needed!
