@@ -181,19 +181,20 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-
+public User() {
+    }
   
 }
 
 //application properties
 spring.application.name=usermicroservice
 server.port=8085
-spring.jpa.hibernate.ddl-auto=-auto=update
+spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.format_sql=true
 
 
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/fg
+spring.datasource.url=jdbc:postgresql://localhost:5432/towermanagement
 spring.jpa.show-sql=true
 spring.datasource.username=postgres
 spring.datasource.password=postgres
