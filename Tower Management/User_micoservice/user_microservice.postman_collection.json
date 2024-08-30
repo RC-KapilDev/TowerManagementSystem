@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "483af5e1-2eba-4a55-9871-2c330693e376",
+		"_postman_id": "3b3532d8-97a0-4595-9e11-5972e7bce666",
 		"name": "user_microservice",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38024664"
+		"_exporter_id": "35318496"
 	},
 	"item": [
 		{
@@ -59,7 +59,21 @@
 			"name": "Create user",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8085/api/users/pincode/600001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"users",
+						"pincode",
+						"600001"
+					]
+				}
 			},
 			"response": []
 		},
@@ -140,6 +154,50 @@
 							"key": "password",
 							"value": "alic772b"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user_info by pincode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8085/api/users/role/FIELD_TECHNICIAN",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"users",
+						"role",
+						"FIELD_TECHNICIAN"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user_info by role",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8085/api/users/role/FIELD_TECHNICIAN",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"users",
+						"role",
+						"FIELD_TECHNICIAN"
 					]
 				}
 			},

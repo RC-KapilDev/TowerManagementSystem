@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/{user_id}")
-    public ResponseEntity<User> getUserById(@PathVariable("user_id") Long userId) {
+    public ResponseEntity<User> getUserById(@PathVariable("user_id") Integer userId) {
         Optional<User> user = userService.getUserById(userId);
         return user.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -36,13 +36,13 @@ public class UserController {
     }
 
     @PutMapping("/{user_id}")
-    public ResponseEntity<User> updateUser(@PathVariable("user_id") Long userId, @RequestBody User userDetails) {
+    public ResponseEntity<User> updateUser(@PathVariable("user_id") Integer userId, @RequestBody User userDetails) {
         User updatedUser = userService.updateUser(userId, userDetails);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{user_id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("user_id") Long userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable("user_id") Integer userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
@@ -56,5 +56,23 @@ public class UserController {
 
         String result = userService.authenticateUser(username, password);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/role/{role}")
+    public ResponseEntity<List<User>> getUsersByRole(@PathVariable("role") String role) {
+        List<User> users = userService.getUsersByRole(role);
+        if (users.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/pincode/{location}")
+    public ResponseEntity<List<User>> getUsersByLocation(@PathVariable("location") Integer location) {
+        List<User> users = userService.getUsersByLocation(location);
+        if (users.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(users);
     }
 }

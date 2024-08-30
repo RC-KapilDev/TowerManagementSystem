@@ -20,7 +20,7 @@ public class UserService {
         return userRepository.findByDeletedStatusFalse();
     }
 
-    public Optional<User> getUserById(Long userId) {
+    public Optional<User> getUserById(Integer userId) {
         return userRepository.findByUserIdAndDeletedStatusFalse(userId);
     }
 
@@ -38,7 +38,7 @@ public class UserService {
         return RandomStringUtils.randomAlphanumeric(8);
     }
 
-    public User updateUser(Long userId, User userDetails) {
+    public User updateUser(Integer userId, User userDetails) {
         User user = userRepository.findByUserIdAndDeletedStatusFalse(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -53,7 +53,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long userId) {
+    public void deleteUser(Integer userId) {
         User user = userRepository.findByUserIdAndDeletedStatusFalse(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -76,5 +76,13 @@ public class UserService {
         } else {
             return "false";
         }
+    }
+
+    public List<User> getUsersByRole(String role) {
+        return userRepository.findByRoleAndDeletedStatusFalse(role);
+    }
+
+    public List<User> getUsersByLocation(Integer pincode) {
+        return userRepository.findByPincodeAndDeletedStatusFalse(pincode);
     }
 }

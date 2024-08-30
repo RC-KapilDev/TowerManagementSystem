@@ -15,7 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private Integer userId;
 
     @Column(name = "name")
     private String name;
@@ -33,7 +33,7 @@ public class User {
     private String role;
 
     @Column(name = "pincode")
-    private String pincode;
+    private Integer pincode;
 
     @Column(name = "active_status")
     private boolean activeStatus;
