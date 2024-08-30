@@ -2,9 +2,13 @@ package com.towermanagement.tower.model;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +23,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class Tower {
 
     @Id
@@ -30,8 +35,8 @@ public class Tower {
     
     private String type;
     
-    @Enumerated(EnumType.STRING)
-    private TowerStatus status;
+    // @Enumerated(EnumType.STRING)
+    private String status;
 
     private String location;
 
@@ -45,13 +50,17 @@ public class Tower {
 
     private Double fuel_reading;
 
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
     private LocalDateTime created_at;
 
+    @LastModifiedDate
+    @Column(nullable = false)
     private LocalDateTime updated_at;
 
     private Date last_maintained;
 
-    private Boolean deleted_status;
+    private Boolean deletedStatus=false;
 
     // Getters and Setters
 
