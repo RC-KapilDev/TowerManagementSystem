@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "483af5e1-2eba-4a55-9871-2c330693e376",
+		"name": "user_microservice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38024664"
+	},
+	"item": [
+		{
+			"name": "Get all users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8085/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"jack\",\r\n    \"email\": \"jack@example.com\",\r\n    \"specialisation\": \"Site Surveys\",\r\n    \"location\": \"Bihar\",\r\n    \"role\": \"Field Technician\",\r\n    \"pincode\": \"897432\",\r\n    \"activeStatus\": true,\r\n    \"deletedStatus\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8085/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create user",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": 500011,\r\n    \"name\": \"Ian Wright\",\r\n    \"email\": \"ian.wright@example.com\",\r\n    \"specialisation\": \"Site Surveys\",\r\n    \"location\": \"Noida\",\r\n    \"role\": \"Field Technician\",\r\n    \"pincode\": \"302001\",\r\n    \"activeStatus\": true,\r\n    \"deletedStatus\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8085/api/users/500011",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"users",
+						"500011"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8085/api/users/500020",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"users",
+						"500020"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validating username and password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8085/api/users/authenticate?username=alice12&password=alic772b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"users",
+						"authenticate"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "alice12"
+						},
+						{
+							"key": "password",
+							"value": "alic772b"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
