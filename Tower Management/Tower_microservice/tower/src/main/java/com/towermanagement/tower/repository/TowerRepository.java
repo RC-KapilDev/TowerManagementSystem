@@ -24,4 +24,9 @@ public interface TowerRepository extends JpaRepository<Tower, Integer>
     @Query("UPDATE Tower t SET t.deletedStatus = true WHERE t.tower_id = :id")
     void softDeleteTower(@Param("id") Integer id);
     List<Tower> findByDeletedStatusFalse();
+
+    @Query("SELECT t FROM Tower t WHERE t.location = :location AND t.deletedStatus = false")
+    List<Tower> findByLocation(@Param("location") String location);
+
+    
 }

@@ -44,6 +44,12 @@ public class TowerService {
             throw new IllegalArgumentException("Given ID " + id + " is not available in the database.");
         }
     }
+    public List<Tower> getTowersByLocation(String location) {
+        return towerRepository.findByLocation(location);
+    }
+    
+    
+    
 
     @Transactional
     public void softDeleteTower(Integer id) {

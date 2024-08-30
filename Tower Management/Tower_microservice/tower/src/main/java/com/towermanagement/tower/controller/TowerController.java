@@ -81,5 +81,18 @@ public class TowerController {
         return ResponseEntity.ok("Tower with ID " + id + " has been soft deleted.");
     }
 
+   @GetMapping("/location/{location}")
+public ResponseEntity<?> getTowersByLocation(@PathVariable String location) {
+    List<Tower> towers = towerService.getTowersByLocation(location);
+    if (towers.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body("No towers found for the given location: " + location);
+    }
+    return ResponseEntity.ok(towers);
+}
+
+
+
+
 }
 

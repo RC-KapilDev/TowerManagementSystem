@@ -1,7 +1,8 @@
 package com.towermanagement.tower.model;
-import java.time.LocalDateTime;
-import java.util.Date;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.sql.Date;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,10 +33,9 @@ public class Tower {
     private Integer tower_id;
 
     private Double height;
-    
+
     private String type;
-    
-    // @Enumerated(EnumType.STRING)
+
     private String status;
 
     private String location;
@@ -48,7 +48,7 @@ public class Tower {
 
     private Integer power_reading;
 
-    private Double fuel_reading;
+    private BigDecimal fuel_reading;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -57,15 +57,11 @@ public class Tower {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updated_at;
-
-    private Date last_maintained;
-
-    private Boolean deletedStatus=false;
-
-    // Getters and Setters
-
-
-}
-
     
 
+    
+       private Date last_maintained;
+
+
+    private Boolean deletedStatus = false;
+}

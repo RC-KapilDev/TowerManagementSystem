@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "2f6c6e3a-3623-499c-be37-cfedfc903af4",
+		"_postman_id": "e46c3e9e-5582-4fa5-a4af-814f51f5677f",
 		"name": "Tower",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38014360"
+		"_exporter_id": "35318496"
 	},
 	"item": [
 		{
@@ -21,6 +21,65 @@
 					"path": [
 						"api",
 						"towers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add towers(http://localhost:8081/api/towers)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"height\": 175.3,\r\n    \"type\": \"4G\",\r\n    \"status\": \"inactive\",\r\n    \"location\": \"Trichy\",\r\n    \"pincode\": 110001,\r\n    \"latitude\": 28.6139,\r\n    \"longitude\": 77.2090,\r\n    \"power_reading\": 1100,\r\n    \"fuel_reading\": 450.00,\r\n    \"deletedStatus\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/towers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"towers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update towers with id(http://localhost:8081/api/towers/400007)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"height\": 140.5,\r\n    \"type\": \"LTE\",\r\n    \"status\": \"under-maintenance\",\r\n    \"location\": \"Bangaloreee\",\r\n    \"pincode\": 560001,\r\n    \"latitude\": 12.9716,\r\n    \"longitude\": 77.5946,\r\n    \"power_reading\": 1150,\r\n    \"fuel_reading\": 275.30\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/towers/400007",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"towers",
+						"400007"
 					]
 				}
 			},
@@ -70,35 +129,6 @@
 			"response": []
 		},
 		{
-			"name": "Add towers(http://localhost:8081/api/towers)",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"height\": 175.3,\r\n    \"type\": \"4G\",\r\n    \"status\": \"inactive\",\r\n    \"location\": \"Trichy\",\r\n    \"pincode\": 110001,\r\n    \"latitude\": 28.6139,\r\n    \"longitude\": 77.2090,\r\n    \"power_reading\": 1100,\r\n    \"fuel_reading\": 450.00,\r\n    \"deletedStatus\": false\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8081/api/towers",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"api",
-						"towers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "delete towers(http://localhost:8081/api/towers)",
 			"request": {
 				"method": "DELETE",
@@ -130,36 +160,6 @@
 			"response": []
 		},
 		{
-			"name": "update towers with id(http://localhost:8081/api/towers/400007)",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"height\": 140.5,\r\n    \"type\": \"LTE\",\r\n    \"status\": \"under-maintenance\",\r\n    \"location\": \"Bangaloreee\",\r\n    \"pincode\": 560001,\r\n    \"latitude\": 12.9716,\r\n    \"longitude\": 77.5946,\r\n    \"power_reading\": 1150,\r\n    \"fuel_reading\": 275.30\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8081/api/towers/400007",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"api",
-						"towers",
-						"400007"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "get deleted tower table where error displays(http://localhost:8081/api/towers/400017)",
 			"request": {
 				"method": "GET",
@@ -175,6 +175,28 @@
 						"api",
 						"towers",
 						"400017"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/towers/pincode/600001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"towers",
+						"pincode",
+						"600001"
 					]
 				}
 			},
