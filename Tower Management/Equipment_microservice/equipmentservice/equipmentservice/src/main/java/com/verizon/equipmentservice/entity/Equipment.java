@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "/equipment")
+@Table(name = "equipment")
 public class Equipment {
 
     @Id
@@ -40,6 +40,9 @@ public class Equipment {
     @Column(nullable = false)
     private Boolean deletedStatus = false;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Boolean claimed = false;
-}
+
+    
+ }
+

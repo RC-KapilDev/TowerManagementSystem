@@ -1,7 +1,7 @@
-package com.towermanagement.tower.model;
+// package com.towermanagement.tower.model;
 
-public enum TowerStatus {
-    ACTIVE,
-    INACTIVE,
-    UNDER_MAINTENANCE
-}
+// public enum TowerStatus {
+//     ACTIVE,
+//     INACTIVE,
+//     UNDER_MAINTENANCE
+// }

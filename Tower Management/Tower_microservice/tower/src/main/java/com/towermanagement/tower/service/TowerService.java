@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.towermanagement.tower.model.Tower;
-import com.towermanagement.tower.model.TowerStatus;
 import com.towermanagement.tower.repository.TowerRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class TowerService {
@@ -16,31 +17,37 @@ public class TowerService {
     private TowerRepository towerRepository;
 
     public List<Tower> getAllTowers() {
-        return towerRepository.findAll();
+        return towerRepository.findByDeletedStatusFalse();
     }
 
     public Tower addTower(Tower tower) {
         return towerRepository.save(tower);
     }
 
-    public Optional<Tower> getTowerById(Integer id) {
-        return towerRepository.findById(id);
+    public Optional<Tower> getById(Integer id) {
+        return towerRepository.findByIdAndDeletedFalse(id);
     }
 
     public List<Tower> getTowersByPincode(Integer pincode) {
         return towerRepository.findByPincode(pincode);
     }
 
-    public List<Tower> getTowersByStatus(TowerStatus status) {
+    public List<Tower> getTowersByStatus(String status) {
         return towerRepository.findByStatus(status);
     }
 
     public Tower updateTower(Integer id, Tower tower) {
-        if (towerRepository.existsById(id)) 
-        {
-            tower.setTower_id(id);
+        if (towerRepository.existsById(id)) {
+            tower.setTower_id(id); // Assuming 'tower_id' is renamed to 'towerId' in the Tower entity
             return towerRepository.save(tower);
+        } else {
+            throw new IllegalArgumentException("Given ID " + id + " is not available in the database.");
         }
-        return null;
     }
+
+    @Transactional
+    public void softDeleteTower(Integer id) {
+        towerRepository.softDeleteTower(id);
+    }
+
 }

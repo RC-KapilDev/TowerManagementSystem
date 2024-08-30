@@ -1,24 +1,17 @@
 package com.verizon.equipmentservice.controller;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.verizon.equipmentservice.entity.Equipment;
 import com.verizon.equipmentservice.service.EquipmentService;
 
-
-
 @RestController
-@RequestMapping("/equipments")
+@RequestMapping("equipments")
 public class EquipmentController {
 
     @Autowired
@@ -38,6 +31,29 @@ public class EquipmentController {
     @GetMapping("/{id}")
     public ResponseEntity<Equipment> getEquipmentById(@PathVariable Integer id) {
         return ResponseEntity.ok(equipmentService.getEquipmentById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Equipment> updateEquipment(@PathVariable Integer id, @RequestBody Equipment equipment) {
+        Equipment existingEquipment = equipmentService.getEquipmentById(id);
+
+        if (existingEquipment == null) {
+            return ResponseEntity.notFound().build(); // Return 404 if equipment not found
+        }
+
+        // Update the existing equipment fields with the new values
+        existingEquipment.setWorkorderId(equipment.getWorkorderId());
+        existingEquipment.setTowerId(equipment.getTowerId());
+        existingEquipment.setSerialNumber(equipment.getSerialNumber());
+        existingEquipment.setManufacture(equipment.getManufacture());
+        existingEquipment.setModel(equipment.getModel());
+        existingEquipment.setEquipmentName(equipment.getEquipmentName());
+        existingEquipment.setDeletedStatus(equipment.getDeletedStatus());
+        existingEquipment.setClaimed(equipment.getClaimed());
+
+        Equipment updatedEquipment = equipmentService.saveEquipment(existingEquipment);
+        if(updatedEquipment==null) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(updatedEquipment);
     }
 
     @DeleteMapping("/{id}")
