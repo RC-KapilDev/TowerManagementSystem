@@ -1,0 +1,136 @@
+{
+	"info": {
+		"_postman_id": "2e7c02c6-93c0-4cac-9dec-5d1612ffc38b",
+		"name": "equipmentservice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38014359"
+	},
+	"item": [
+		{
+			"name": "display",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"workorderId\": 200,\r\n    \"towerId\": 400001,\r\n    \"serialNumber\": 123456789,\r\n    \"manufacture\": \"Acme\",\r\n    \"model\": \"Model z\",\r\n    \"equipmentName\": \"Signal Booster\",\r\n    \"deletedStatus\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/equipments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"equipments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "bad request(invalid tower_id)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"workorderId\": 200,\r\n    \"towerId\": 400006,\r\n    \"serialNumber\": 123456789,\r\n    \"manufacture\": \"Acme Corp\",\r\n    \"model\": \"Model X\",\r\n    \"equipmentName\": \"Signal Booster\",\r\n    \"deletedStatus\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/equipments/80000000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"equipments",
+						"80000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "display",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "deletion",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/equipments/80000011",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"equipments",
+						"80000011"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "by manufacture",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/equipments/manufacture/Acme Corp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"equipments",
+						"manufacture",
+						"Acme Corp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/equipments/80000000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"equipments",
+						"80000000"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
