@@ -1,27 +1,20 @@
 package com.verizon.equipmentservice.controller;
-
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.verizon.equipmentservice.entity.Equipment;
 import com.verizon.equipmentservice.service.EquipmentService;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("equipments")
+@RequestMapping("/api/equipments")
 public class EquipmentController {
 
     @Autowired
     private EquipmentService equipmentService;
-
-    @PostMapping
-    public ResponseEntity<Equipment> createEquipment(@RequestBody Equipment equipment) {
-        Equipment savedEquipment = equipmentService.saveEquipment(equipment);
-        return ResponseEntity.ok(savedEquipment);
-    }
 
     @GetMapping
     public ResponseEntity<List<Equipment>> getAllEquipments() {
@@ -33,37 +26,35 @@ public class EquipmentController {
         return ResponseEntity.ok(equipmentService.getEquipmentById(id));
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<Equipment>> getEquipmentByName(@PathVariable String name) {
+        return ResponseEntity.ok(equipmentService.getEquipmentByName(name));
+    }
+
+    @GetMapping("/manufacture/{manufacture}")
+    public ResponseEntity<List<Equipment>> getEquipmentByManufacture(@PathVariable String manufacture) {
+        return ResponseEntity.ok(equipmentService.getEquipmentByManufacture(manufacture));
+    }
+
+    @PostMapping
+    public ResponseEntity<Equipment> createEquipment(@RequestBody Equipment equipment) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(equipmentService.createEquipment(equipment));
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Equipment> updateEquipment(@PathVariable Integer id, @RequestBody Equipment equipment) {
-        Equipment existingEquipment = equipmentService.getEquipmentById(id);
+    public ResponseEntity<Equipment> updateEquipment(@PathVariable Integer id, @RequestBody Equipment equipmentDetails) {
+        return ResponseEntity.ok(equipmentService.updateEquipment(id, equipmentDetails));
+    }
 
-        if (existingEquipment == null) {
-            return ResponseEntity.notFound().build(); // Return 404 if equipment not found
-        }
-
-        // Update the existing equipment fields with the new values
-        existingEquipment.setWorkorderId(equipment.getWorkorderId());
-        existingEquipment.setTowerId(equipment.getTowerId());
-        existingEquipment.setSerialNumber(equipment.getSerialNumber());
-        existingEquipment.setManufacture(equipment.getManufacture());
-        existingEquipment.setModel(equipment.getModel());
-        existingEquipment.setEquipmentName(equipment.getEquipmentName());
-        existingEquipment.setDeletedStatus(equipment.getDeletedStatus());
-        existingEquipment.setClaimed(equipment.getClaimed());
-
-        Equipment updatedEquipment = equipmentService.saveEquipment(existingEquipment);
-        if(updatedEquipment==null) return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(updatedEquipment);
+    @PatchMapping("/{id}/claim")
+    public ResponseEntity<Void> claimEquipment(@PathVariable Integer id) {
+        equipmentService.claimEquipment(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEquipment(@PathVariable Integer id) {
-        equipmentService.deleteEquipment(id);
+        equipmentService.softDeleteEquipment(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/manufacture/{manufacture}")
-    public ResponseEntity<List<Equipment>> getEquipmentsByManufacture(@PathVariable String manufacture) {
-        return ResponseEntity.ok(equipmentService.getEquipmentsByManufacture(manufacture));
     }
 }

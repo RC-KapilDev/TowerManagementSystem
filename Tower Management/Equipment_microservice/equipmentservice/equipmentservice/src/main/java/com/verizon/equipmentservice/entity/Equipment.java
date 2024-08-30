@@ -1,7 +1,7 @@
 package com.verizon.equipmentservice.entity;
 
 import lombok.Data;
-//import javax.persistence.*;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,28 +21,34 @@ public class Equipment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "equipment_id_seq")
     @SequenceGenerator(name = "equipment_id_seq", sequenceName = "equipment_id_seq", allocationSize = 1)
+    @Column(name = "equipment_id")
     private Integer equipmentId;
 
-    @Column(nullable = false)
+    @Column(name = "workorder_id", nullable = false)
     private Integer workorderId;
 
-    @Column(nullable = false)
+    @Column(name = "tower_id", nullable = false)
     private Integer towerId;
 
+    @Column(name = "serial_number")
     private Integer serialNumber;
-    private String manufacture;
-    private String model;
-    private String equipmentName;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "manufacture")
+    private String manufacture;
+
+    @Column(name = "model")
+    private String model;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
+    @Column(name = "equipment_name")
+    private String equipmentName;
+
+    @Column(name = "deleted_status", nullable = false)
     private Boolean deletedStatus = false;
 
-    @Column(nullable = true)
+    @Column(name = "claimed")
     private Boolean claimed = false;
-
-    
- }
+}
 

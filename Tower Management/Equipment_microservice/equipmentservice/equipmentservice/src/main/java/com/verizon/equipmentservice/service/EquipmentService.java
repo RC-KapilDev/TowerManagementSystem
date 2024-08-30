@@ -1,13 +1,16 @@
 package com.verizon.equipmentservice.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.verizon.equipmentservice.entity.Equipment;
-import com.verizon.equipmentservice.entity.TowerDTO;
 import com.verizon.equipmentservice.repository.EquipmentRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EquipmentService {
@@ -16,37 +19,62 @@ public class EquipmentService {
     private EquipmentRepository equipmentRepository;
 
     @Autowired
-    private TowerService towerService;
-
-    /**
-     * Save equipment after verifying that the tower exists.
-     * @param equipment The equipment to save.
-     * @return The saved equipment or null if the tower does not exist.
-     */
-    public Equipment saveEquipment(Equipment equipment) {
-        // Check if the tower exists before saving the equipment
-        TowerDTO tower = towerService.getTowerIfExists(equipment.getTowerId());
-        if (tower != null) {
-            return equipmentRepository.save(equipment);
-        } else {
-            // Tower does not exist, so return null or handle accordingly
-            return null;
-        }
-    }
+    private ValidationService validationService;
 
     public List<Equipment> getAllEquipments() {
-        return equipmentRepository.findAll();
+        return equipmentRepository.findByDeletedStatusFalse();
     }
 
     public Equipment getEquipmentById(Integer id) {
-        return equipmentRepository.findById(id).orElse(null);
+        return equipmentRepository.findById(id)
+                .filter(equipment -> !equipment.getDeletedStatus())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Equipment not found"));
     }
 
-    public List<Equipment> getEquipmentsByManufacture(String manufacture) {
-        return equipmentRepository.findByManufacture(manufacture);
+    public List<Equipment> getEquipmentByName(String name) {
+        return equipmentRepository.findByEquipmentNameIgnoreCaseAndDeletedStatusFalse(name);
     }
 
-    public void deleteEquipment(Integer id) {
-        equipmentRepository.deleteById(id);
+    public List<Equipment> getEquipmentByManufacture(String manufacture) {
+        return equipmentRepository.findByManufactureIgnoreCaseAndDeletedStatusFalse(manufacture);
+    }
+
+    public Equipment createEquipment(Equipment equipment) {
+        validationService.validateTowerExists(equipment.getTowerId());
+        validationService.validateWorkOrderExists(equipment.getWorkorderId());
+        return equipmentRepository.save(equipment);
+    }
+
+    public Equipment updateEquipment(Integer id, Equipment equipmentDetails) {
+        validationService.validateTowerExists(equipmentDetails.getTowerId());
+        validationService.validateWorkOrderExists(equipmentDetails.getWorkorderId());
+        Equipment equipment = equipmentRepository.findById(id)
+                .filter(e -> !e.getDeletedStatus())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Equipment not found"));
+
+        equipment.setSerialNumber(equipmentDetails.getSerialNumber());
+        equipment.setManufacture(equipmentDetails.getManufacture());
+        equipment.setModel(equipmentDetails.getModel());
+        equipment.setEquipmentName(equipmentDetails.getEquipmentName());
+        equipment.setClaimed(equipmentDetails.getClaimed());
+        return equipmentRepository.save(equipment);
+    }
+
+    public void claimEquipment(Integer id) {
+        Equipment equipment = equipmentRepository.findById(id)
+                .filter(e -> !e.getDeletedStatus())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Equipment not found"));
+
+        equipment.setClaimed(true);
+        equipmentRepository.save(equipment);
+    }
+
+    public void softDeleteEquipment(Integer id) {
+        Equipment equipment = equipmentRepository.findById(id)
+                .filter(e -> !e.getDeletedStatus())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Equipment not found"));
+
+        equipment.setDeletedStatus(true);
+        equipmentRepository.save(equipment);
     }
 }

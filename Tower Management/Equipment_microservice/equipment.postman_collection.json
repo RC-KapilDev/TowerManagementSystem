@@ -1,0 +1,230 @@
+{
+	"info": {
+		"_postman_id": "62b99274-6268-4e22-8c59-daade739692e",
+		"name": "equipment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35318496"
+	},
+	"item": [
+		{
+			"name": "get all equipments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/api/equipments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"equipments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "equipment by id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/equipments/80000001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"equipments",
+						"80000001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search by manufacture",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Router\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/equipments/manufacture/Acme Corp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"equipments",
+						"manufacture",
+						"Acme Corp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search by equipment name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/api/equipments/name/Signal Booster",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"equipments",
+						"name",
+						"Signal Booster"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create new equipment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"workorderId\": 200,\r\n    \"towerId\": 400003,\r\n    \"serialNumber\": 12345,\r\n    \"manufacture\": \"ABC\",\r\n    \"model\": \"X100\",\r\n    \"equipmentName\": \"Router\",\r\n    \"claimed\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/equipments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"equipments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update equipment by id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"workorderId\": 200,\r\n    \"towerId\": 400003,\r\n    \"serialNumber\": 67890,\r\n    \"manufacture\": \"XYZ\",\r\n    \"model\": \"Y200\",\r\n    \"equipmentName\": \"Switch\",\r\n    \"claimed\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/equipments/80000000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"equipments",
+						"80000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "claim equipment ",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"workorderId\": 200,\r\n    \"towerId\": 400003,\r\n    \"serialNumber\": 67890,\r\n    \"manufacture\": \"XYZ\",\r\n    \"model\": \"Y200\",\r\n    \"equipmentName\": \"Switch\",\r\n    \"claimed\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8084/api/equipments/80000000/claim",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"equipments",
+						"80000000",
+						"claim"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "soft delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8084/api/equipments/80000000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"api",
+						"equipments",
+						"80000000"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

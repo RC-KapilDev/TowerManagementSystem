@@ -13,7 +13,7 @@ public class EquipmentserviceApplication {
 		SpringApplication.run(EquipmentserviceApplication.class, args);
 	}
 
-@Bean
+    @Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	
