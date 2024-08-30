@@ -11,7 +11,7 @@ DB_NAME = 'dev1'
 DB_USER = 'postgres'
 DB_PASSWORD = 'root'
 
-def fetch_user_details(user_id=None):
+def fetch_tower_details(tower_id=None):
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(
         host=DB_HOST,
@@ -22,13 +22,13 @@ def fetch_user_details(user_id=None):
     )
     cursor = conn.cursor()
 
-    # Query to fetch user details
-    query = "SELECT * FROM users"
+    # Query to fetch tower details
+    query = "SELECT * FROM tower_info"
     params = []
 
-    if user_id:
-        query += " WHERE user_id = %s"
-        params.append(user_id)
+    if tower_id:
+        query += " WHERE tower_id = %s"
+        params.append(tower_id)
 
     # Execute the query
     cursor.execute(query, params)
@@ -40,26 +40,26 @@ def fetch_user_details(user_id=None):
     columns = [desc[0] for desc in cursor.description]
 
     # Convert rows to a list of dictionaries
-    user_details = [dict(zip(columns, row)) for row in rows]
+    tower_details = [dict(zip(columns, row)) for row in rows]
 
     # Close the database connection
     cursor.close()
     conn.close()
 
-    return user_details
+    return tower_details
 
-@app.route('/api/users', methods=['GET'])
-def get_all_users():
-    user_details = fetch_user_details()
-    return jsonify(user_details)
+@app.route('/api/towers', methods=['GET'])
+def get_all_towers():
+    tower_details = fetch_tower_details()
+    return jsonify(tower_details)
 
-@app.route('/api/users/<int:user_id>', methods=['GET'])
-def get_user(user_id):
-    user_details = fetch_user_details(user_id)
-    if user_details:
-        return jsonify(user_details[0])
+@app.route('/api/towers/<int:tower_id>', methods=['GET'])
+def get_tower(tower_id):
+    tower_details = fetch_tower_details(tower_id)
+    if tower_details:
+        return jsonify(tower_details[0])
     else:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"error": "Tower not found"}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=5001)

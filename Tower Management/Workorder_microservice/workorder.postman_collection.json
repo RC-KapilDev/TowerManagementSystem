@@ -1,0 +1,291 @@
+{
+	"info": {
+		"_postman_id": "bf2b756a-d2a1-429b-a5e1-ec157681208b",
+		"name": "workorder",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35318496"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"COMPLETED\"\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/workorders/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all  workorder",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/workorders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post work order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tower\": 400001,\r\n    \"user\": 500002,\r\n    \"taskDescription\": \"Inspect the tower for maintenance.\",\r\n    \"scheduledDate\": \"2024-09-01\",\r\n    \"status\": \"PENDING\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/workorders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get by work id ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/workorders/237",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders",
+						"237"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update using work order id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tower\": 400001,\r\n    \"user\": 500001,\r\n    \"taskDescription\": \"Update task description.\",\r\n    \"scheduledDate\": \"2024-09-02\",\r\n    \"status\": \"IN_PROGRESS\",\r\n    \"completedDate\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/workorders/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "status update to compeleted",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"COMPLETED\"\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/workorders/1/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders",
+						"1",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "soft delete",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"COMPLETED\"\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/workorders/status/PENDING",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders",
+						"status",
+						"PENDING"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all workorder by status pending",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"COMPLETED\"\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/workorders/user/500001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders",
+						"user",
+						"500001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all workorder based on user id",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"completedDate\": \"2024-09-01T15:30:00\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/workorders/237/completed-date",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders",
+						"237",
+						"completed-date"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "to update completed date",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"completedDate\": \"2024-09-01T15:30:00\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/workorders/237/completed-date",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"workorders",
+						"237",
+						"completed-date"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
