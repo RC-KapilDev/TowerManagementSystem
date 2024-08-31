@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "d3af5113-6c59-4dc2-b293-13fae09c2f97",
+		"name": "maintainance",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35318496"
+	},
+	"item": [
+		{
+			"name": "post new maintenance record",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user\": 500001,\r\n  \"workOrder\": 221,\r\n  \"towerInfo\": 400003,\r\n  \"equipmentRequired\": \"Wrench, Screwdriver\",\r\n  \"issuesFaced\": \"Loose bolts\",\r\n  \"priority\": \"High\",\r\n  \"createdAt\": \"2024-08-30T14:30:00\",\r\n  \"deletedStatus\": false\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/api/maintenances",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"maintenances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all maintainace ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/maintenances",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"maintenances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update maintenance",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\": 500002,\r\n    \"workOrder\": 221,\r\n    \"towerInfo\": 400003,\r\n    \"equipmentRequired\": \"Wrench, Screwdriver\",\r\n    \"issuesFaced\": \"Loose bolts\",\r\n    \"priority\": \"High\",\r\n    \"createdAt\": \"2024-08-30T14:30:00\",\r\n    \"deletedStatus\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/api/maintenances/7000000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"maintenances",
+						"7000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all maintenance report by tower id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/maintenances/tower/400003",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"maintenances",
+						"tower",
+						"400003"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all maintenance by priority",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/maintenances/priority/high",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"maintenances",
+						"priority",
+						"high"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
