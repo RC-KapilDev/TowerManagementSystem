@@ -16,13 +16,11 @@ public class WorkorderService {
 
     private final String workOrderApiUrl = "http://localhost:8083/api/workorders/";
 
-    public WorkorderDTO validateWorkOrderExists(Integer workOrderId) {
+    public void validateWorkOrderExists(Integer workOrderId) {
         try {
-            WorkorderDTO workOrder = restTemplate.getForObject(workOrderApiUrl + workOrderId, WorkorderDTO.class);
-            if (workOrder == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Work Order not found");
-            }
-            return workOrder;
+            restTemplate.getForObject(workOrderApiUrl + workOrderId, WorkorderDTO.class);
+           
+           
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Work Order not found");
         }

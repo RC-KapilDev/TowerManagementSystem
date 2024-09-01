@@ -11,5 +11,7 @@ import java.util.List;
 public interface MaintenanceReportRepository extends JpaRepository<MaintenanceReport, Integer> {
     List<MaintenanceReport> findByTowerInfo(Integer towerId);
     List<MaintenanceReport> findByPriority(String priority);
+    List<MaintenanceReport> findByUser(Integer user);
+    
 }
 

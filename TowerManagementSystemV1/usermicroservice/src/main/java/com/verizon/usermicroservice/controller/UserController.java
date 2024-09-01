@@ -49,14 +49,14 @@ public class UserController {
 
 //authentication
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<String> authenticateUser(
-        @RequestParam String username,
-        @RequestParam String password) {
+@PostMapping("/authenticate")
+public ResponseEntity<User> authenticateUser(
+    @RequestParam String username,
+    @RequestParam String password) {
 
-        String result = userService.authenticateUser(username, password);
-        return ResponseEntity.ok(result);
-    }
+    User result = userService.authenticateUser(username, password);
+    return ResponseEntity.ok(result);
+}
 
     @GetMapping("/role/{role}")
     public ResponseEntity<List<User>> getUsersByRole(@PathVariable("role") String role) {

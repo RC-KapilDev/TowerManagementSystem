@@ -2,7 +2,9 @@ package com.verizon.usermicroservice.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.verizon.usermicroservice.model.User;
 import com.verizon.usermicroservice.repo.UserRepository;
@@ -63,20 +65,20 @@ public class UserService {
     
 //authenticate 
 
-    public String authenticateUser(String username, String password) {
-        Optional<User> userOptional = userRepository.findByUsernameAndDeletedStatusFalse(username);
-        if (userOptional.isEmpty()) {
-            return "false";
-        }
-
-        User user = userOptional.get();
-        // Check plain text password
-        if (password.equals(user.getPassword())) {
-            return "true";
-        } else {
-            return "false";
-        }
+    public User authenticateUser(String username, String password) {
+    Optional<User> userOptional = userRepository.findByUsernameAndDeletedStatusFalse(username);
+    if (userOptional.isEmpty()) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
+
+    User user = userOptional.get();
+    // Check plain text password
+    if (password.equals(user.getPassword())) {
+        return user;
+    } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid password");
+    }
+}
 
     public List<User> getUsersByRole(String role) {
         return userRepository.findByRoleAndDeletedStatusFalse(role);

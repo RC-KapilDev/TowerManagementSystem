@@ -2,8 +2,6 @@ package com.towermanagement.workorderservice.service;
 
 
 import com.towermanagement.workorderservice.model.WorkOrder;
-import com.towermanagement.workorderservice.model.DTO.TowerDTO;
-import com.towermanagement.workorderservice.model.DTO.UserDTO;
 import com.towermanagement.workorderservice.repository.WorkOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

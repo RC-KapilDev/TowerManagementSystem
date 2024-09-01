@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,13 +21,15 @@ public class TowerService {
     private  String towerApiUrl;
 
     
-    public TowerDTO validateTowerExists(Integer towerId) {
+      public void validateTowerExists(Integer towerId) {
+        String url = "http://localhost:8083/api/towers/" + towerId;
         try {
-            // Attempt to fetch the tower by ID
-            return restTemplate.getForObject(towerApiUrl + towerId, TowerDTO.class);
+            restTemplate.getForObject(url, Object.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tower not found");
         } catch (Exception e) {
-            // If an exception occurs (e.g., 404 Not Found), throw a ResponseStatusException
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tower not found", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error validating tower");
         }
     }
+
 }

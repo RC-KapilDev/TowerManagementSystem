@@ -38,8 +38,8 @@ public class MaintenanceReportService {
 
     public MaintenanceReport createMaintenanceReport(MaintenanceReport maintenanceReport) {
         // Validate if the user exists
-        System.out.println(userService.validateUserExists(maintenanceReport.getUser()));
 
+        userService.validateUserExists(maintenanceReport.getUser());
         //Validate if the tower exists
         towerService.validateTowerExists(maintenanceReport.getTowerInfo());
 
@@ -82,5 +82,13 @@ public class MaintenanceReportService {
 
     public List<MaintenanceReport> getReportsByPriority(String priority) {
         return maintenanceReportRepository.findByPriority(priority);
+    }
+
+    public List<MaintenanceReport> getRepostsByUser(Integer user){
+        return maintenanceReportRepository.findByUser(user);
+    }
+
+    public void deleteMaintenanceReport(Integer mId) {
+        maintenanceReportRepository.deleteById(mId);
     }
 }

@@ -1,24 +1,20 @@
 package com.towermanagement.workorderservice.model.DTO;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.time.LocalDate;
-
-
+import java.time.LocalDateTime;
 
 @Data
 public class TowerDTO {
-    
+
     @JsonProperty("tower_id")
-    private int towerId;
+    private Integer towerId;
 
     @JsonProperty("height")
-    private double height;
+    private Double height;
 
     @JsonProperty("type")
     private String type;
@@ -30,19 +26,19 @@ public class TowerDTO {
     private String location;
 
     @JsonProperty("pincode")
-    private int pincode;
+    private Integer pincode;
 
     @JsonProperty("latitude")
-    private double latitude;
+    private Double latitude;
 
     @JsonProperty("longitude")
-    private double longitude;
+    private Double longitude;
 
     @JsonProperty("power_reading")
-    private double powerReading;
+    private Double powerReading;
 
     @JsonProperty("fuel_reading")
-    private String fuelReading;
+    private Double fuelReading; // Adjusted from String to Double
 
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
@@ -57,9 +53,9 @@ public class TowerDTO {
     private LocalDate lastMaintained;
 
     @JsonProperty("deleted_status")
-    private boolean deletedStatus;
-
-    // Getters and Setters
+    private boolean deletedStatus; // Adjusted property name to match JSON field
 }
+
+
 
 

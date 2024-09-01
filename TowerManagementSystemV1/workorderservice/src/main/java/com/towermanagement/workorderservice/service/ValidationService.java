@@ -2,6 +2,7 @@ package com.towermanagement.workorderservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,21 +17,25 @@ public class ValidationService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public UserDTO validateUserExists(Integer userId) {
+    public void validateUserExists(Integer userId) {
         String url = "http://localhost:8083/api/users/" + userId;
         try {
-            return restTemplate.getForObject(url, UserDTO.class);
-        } catch (Exception e) {
+            restTemplate.getForObject(url, Object.class);
+        } catch (HttpClientErrorException.NotFound e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error validating user");
         }
     }
 
-    public TowerDTO validateTowerExists(Integer towerId) {
+    public void validateTowerExists(Integer towerId) {
         String url = "http://localhost:8083/api/towers/" + towerId;
         try {
-            return restTemplate.getForObject(url, TowerDTO.class);
-        } catch (Exception e) {
+            restTemplate.getForObject(url, Object.class);
+        } catch (HttpClientErrorException.NotFound e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tower not found");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error validating tower");
         }
     }
 }

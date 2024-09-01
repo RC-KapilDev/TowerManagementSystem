@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.verizon.equipmentservice.entity.Equipment;
+import com.verizon.equipmentservice.service.CombinedService;
 import com.verizon.equipmentservice.service.EquipmentService;
 
 import java.util.List;
@@ -15,6 +16,10 @@ public class EquipmentController {
 
     @Autowired
     private EquipmentService equipmentService;
+
+    @Autowired
+    private   CombinedService combinedService;
+  
 
     @GetMapping
     public ResponseEntity<List<Equipment>> getAllEquipments() {
@@ -56,5 +61,16 @@ public class EquipmentController {
     public ResponseEntity<Void> deleteEquipment(@PathVariable Integer id) {
         equipmentService.softDeleteEquipment(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/workorder/{towerId}")
+    public ResponseEntity<List<Equipment>> getAllEquipmentsByWorkOrderId(@PathVariable Integer towerId) {
+        List<Equipment> equipments = equipmentService.getallEquipmentsByWorkorderId(towerId);
+        return ResponseEntity.ok(equipments);
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<Equipment> getEquipmentsByUserId(@PathVariable int userId) {
+        return combinedService.fetchEquipmentsForUser(userId);
     }
 }

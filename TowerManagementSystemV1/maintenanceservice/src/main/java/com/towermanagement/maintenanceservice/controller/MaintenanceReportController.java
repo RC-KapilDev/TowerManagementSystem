@@ -4,9 +4,11 @@ import com.towermanagement.maintenanceservice.model.MaintenanceReport;
 import com.towermanagement.maintenanceservice.service.MaintenanceReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -67,6 +69,25 @@ public class MaintenanceReportController {
             return maintenanceReportService.getReportsByPriority(priority);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to retrieve maintenance reports by priority", e);
+        }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<MaintenanceReport>> getReportsByUser(@PathVariable("userId") Integer userId) {
+        List<MaintenanceReport> reports = maintenanceReportService.getRepostsByUser(userId);
+        List<MaintenanceReport> rep = new ArrayList<>();
+        if (reports.isEmpty()) {
+            return new ResponseEntity<>(rep,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(reports, HttpStatus.OK);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMaintenanceReport(@PathVariable("id") Integer id) {
+        try {
+            maintenanceReportService.deleteMaintenanceReport(id);
+            return new ResponseEntity<>("Maintenance report deleted successfully", HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to delete maintenance report", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

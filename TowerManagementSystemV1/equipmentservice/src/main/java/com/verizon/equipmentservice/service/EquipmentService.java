@@ -15,6 +15,8 @@ import java.util.Optional;
 @Service
 public class EquipmentService {
 
+    
+
     @Autowired
     private EquipmentRepository equipmentRepository;
 
@@ -76,5 +78,9 @@ public class EquipmentService {
 
         equipment.setDeletedStatus(true);
         equipmentRepository.save(equipment);
+    }
+
+    public List<Equipment> getallEquipmentsByWorkorderId(Integer towerId){
+        return equipmentRepository.findByWorkorderIdAndDeletedStatusFalse(towerId);
     }
 }

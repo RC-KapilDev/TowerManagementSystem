@@ -1,5 +1,5 @@
 @echo off
-set BASE_DIR=C:\Users\kapildev\Desktop\try
+set BASE_DIR=C:\Users\kapildev\Desktop\main_TTM\TowerManagementSystem\TowerManagementSystemV1
 
 for %%D in (
     sertry
