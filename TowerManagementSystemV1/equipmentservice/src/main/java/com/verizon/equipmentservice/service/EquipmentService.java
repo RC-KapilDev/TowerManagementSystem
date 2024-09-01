@@ -83,4 +83,8 @@ public class EquipmentService {
     public List<Equipment> getallEquipmentsByWorkorderId(Integer towerId){
         return equipmentRepository.findByWorkorderIdAndDeletedStatusFalse(towerId);
     }
+
+    public List<Equipment> getallEquipmentsByTowerId(Integer towerId){
+        return equipmentRepository.findByTowerIdAndDeletedStatusFalse(towerId);
+    }
 }

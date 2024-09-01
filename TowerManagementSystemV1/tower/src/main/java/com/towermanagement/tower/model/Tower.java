@@ -51,17 +51,11 @@ public class Tower {
     private BigDecimal fuel_reading;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime created_at;
+    @Column(updatable = false)
+    private LocalDateTime created_at = LocalDateTime.now();
 
     @LastModifiedDate
-    @Column(nullable = false)
     private LocalDateTime updated_at;
-    
-
-    
-       private Date last_maintained;
-
-
+    private Date last_maintained;
     private Boolean deletedStatus = false;
 }

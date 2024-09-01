@@ -73,4 +73,9 @@ public class EquipmentController {
     public List<Equipment> getEquipmentsByUserId(@PathVariable int userId) {
         return combinedService.fetchEquipmentsForUser(userId);
     }
+
+    @GetMapping("/tower/{towerId}")
+    public List<Equipment> getEquipmentsByTowerID(@PathVariable int towerId) {
+        return equipmentService.getallEquipmentsByTowerId(towerId);
+    }
 }

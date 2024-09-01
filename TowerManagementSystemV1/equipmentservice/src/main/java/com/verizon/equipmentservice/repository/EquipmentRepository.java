@@ -15,6 +15,7 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
     List<Equipment> findByManufactureIgnoreCaseAndDeletedStatusFalse(String manufacture);
     List<Equipment> findByDeletedStatusFalse();
     List<Equipment> findByWorkorderIdAndDeletedStatusFalse(Integer towerId);
+    List<Equipment> findByTowerIdAndDeletedStatusFalse(Integer towerId);
 
   
 }
