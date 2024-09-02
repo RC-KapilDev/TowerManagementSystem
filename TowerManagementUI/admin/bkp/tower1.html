@@ -92,6 +92,8 @@
     </div>
 </div>
 
+
+
 <!-- Add Tower Modal -->
 <div class="modal fade" id="addTowerModal" tabindex="-1" aria-labelledby="addTowerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -145,6 +147,35 @@
     </div>
 </div>
 
+
+<!-- Issue Work Order Modal -->
+<div class="modal fade" id="issueWorkOrderModal" tabindex="-1" aria-labelledby="issueWorkOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="issueWorkOrderModalLabel">Issue Work Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="issueWorkOrderForm">
+                    <input type="hidden" id="workOrderTowerId">
+                    <div class="mb-3">
+                        <label for="taskDescription" class="form-label">Task Description</label>
+                        <textarea class="form-control" id="taskDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userId" class="form-label">Assign to Technician</label>
+                        <select class="form-select" id="userId" required>
+                            <!-- User options will be populated here by JavaScript -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Work Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Fetch tower details from the API and display them in the table
     async function fetchTowerDetails() {
@@ -172,7 +203,8 @@
                     <td>${new Date(tower.last_maintained).toLocaleDateString()}</td>
                     <td>
                         <button class="btn btn-sm btn-warning mb-2" onclick="editTower(${tower.tower_id})">Edit</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteTower(${tower.tower_id})">Delete</button>
+                        <button class="btn btn-sm btn-danger mb-2" onclick="deleteTower(${tower.tower_id})">Delete</button>
+                        <button class="btn btn-sm btn-info" onclick="issueWorkOrder(${tower.tower_id})">Issue Work Order</button>
                     </td>
                 `;
 
@@ -182,6 +214,60 @@
             console.error('Error fetching tower details:', error);
         }
     }
+
+
+    // Function to open the "Issue Work Order" modal and populate the technician dropdown
+function issueWorkOrder(towerId) {
+    document.getElementById('workOrderTowerId').value = towerId;
+
+    fetch('http://localhost:8083/api/users')
+        .then(response => response.json())
+        .then(users => {
+            const userDropdown = document.getElementById('userId');
+            userDropdown.innerHTML = ''; // Clear previous options
+
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.userId;
+                option.text = ` ${user.userId} - ${user.name} (${user.role}) - ${user.specialisation}  - ${user.pincode}`;
+                userDropdown.appendChild(option);
+            });
+
+            const workOrderModal = new bootstrap.Modal(document.getElementById('issueWorkOrderModal'));
+            workOrderModal.show();
+        })
+        .catch(error => console.error('Error fetching user data:', error));
+}
+
+// Handle the work order form submission
+document.getElementById('issueWorkOrderForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const workOrder = {
+        tower: document.getElementById('workOrderTowerId').value,
+        taskDescription: document.getElementById('taskDescription').value,
+        user: document.getElementById('userId').value
+    };
+
+    fetch('http://localhost:8083/api/workorders', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(workOrder)
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Work order issued successfully');
+            const workOrderModal = bootstrap.Modal.getInstance(document.getElementById('issueWorkOrderModal'));
+            workOrderModal.hide();
+        } else {
+            alert('Failed to issue work order');
+        }
+    })
+    .catch(error => console.error('Error issuing work order:', error));
+});
+
 
     // Open the modal and pre-fill the form with tower details
     function editTower(towerId) {

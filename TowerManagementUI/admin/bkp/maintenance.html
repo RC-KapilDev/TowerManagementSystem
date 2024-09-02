@@ -215,12 +215,13 @@
         const equipmentName = document.getElementById('equipmentName').value;
 
         try {
-            const response = await fetch(`http://localhost:8083/api/maintenances/${workOrderId}/issue-equipment`, {
+            const response = await fetch(`http://localhost:8083/api/equipments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    workorderId:workOrderId,
                     towerId: towerId,
                     manufacturer: manufacturer,
                     model: model,

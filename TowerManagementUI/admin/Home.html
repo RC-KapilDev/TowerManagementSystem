@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapsible Sidebar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 280px;
+            background-color: #343a40;
+            padding-top: 1rem;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-collapsed {
+            transform: translateX(-280px);
+        }
+
+        .content {
+            margin-left: 280px;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .content-collapsed {
+            margin-left: 0;
+        }
+
+        .sidebar-toggler {
+            margin-top: 1rem;
+            z-index: 1001;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-280px);
+            }
+            .sidebar-collapsed {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+            }
+            .content-collapsed {
+                margin-left: 280px;
+            }
+            .sidebar-toggler {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar sidebar-collapsed">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4 ">Tower Management </span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" aria-current="page">
+                    Maintenance Management
+                </a>
+            </li>
+            <li>
+                <a href="TowerManagement.html" class="nav-link text-white">
+                    TowerManagement
+                </a>
+            </li>
+            <li>
+                <a href="UserManagement.html" class="nav-link text-white">
+                    UserManagement
+                </a>
+            </li>
+        </ul>
+        <hr>
+        
+    </div>
+
+    <!-- Main content -->
+    <div id="content" class="content content-collapsed">
+        <button id="sidebar-toggler" class="btn btn-primary sidebar-toggler">☰</button>
+        
+<div class="container mt-5">
+    <h2 class="text-center">Maintenance Reports</h2>
+    
+    <!-- Filter by Priority -->
+    <div class="mb-3">
+        <label for="priorityFilter" class="form-label">Filter by Priority</label>
+        <select id="priorityFilter" class="form-select">
+            <option value="">All</option>
+            <option value="high">High</option>
+            <option value="moderate">Moderate</option>
+            <option value="lowest">Lowest</option>
+        </select>
+    </div>
+    
+    <!-- Filter by Tower ID -->
+    <div class="mb-3">
+        <label for="towerIdFilter" class="form-label">Filter by Tower ID</label>
+        <input type="number" id="towerIdFilter" class="form-control">
+    </div>
+    
+    <button class="btn btn-primary mb-3" onclick="fetchMaintenanceReports()">Apply Filters</button>
+    
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Tower ID</th>
+                    <th>Maintenance ID</th>
+                    <th>User ID</th>
+                    <th>Work Order</th>
+                    <th>Equipment Required</th>
+                    <th>Issues Faced</th>
+                    <th>Priority</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="maintenanceTableBody">
+                <!-- Data will be injected here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal for Issuing Equipment -->
+<div class="modal fade" id="issueEquipmentModal" tabindex="-1" aria-labelledby="issueEquipmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="issueEquipmentModalLabel">Issue Equipment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="issueEquipmentForm">
+                    <input type="hidden" id="workOrderId">
+                    <input type="hidden" id="towerId">
+                    
+                    <div class="mb-3">
+                        <label for="manufacturer" class="form-label">Manufacturer</label>
+                        <input type="text" class="form-control" id="manufacturer" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="model" class="form-label">Model</label>
+                        <input type="text" class="form-control" id="model" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="serialNumber" class="form-label">Serial Number</label>
+                        <input type="text" class="form-control" id="serialNumber" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="equipmentName" class="form-label">Equipment Name</label>
+                        <input type="text" class="form-control" id="equipmentName" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Viewing Work Order and User Details -->
+<div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewDetailsModalLabel">Work Order and User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="workOrderDetails">
+                    <h5>Work Order Details</h5>
+                    <p id="taskDescription"></p>
+                    <p id="scheduledDate"></p>
+                    <p id="status"></p>
+                    <p id="completedDate"></p>
+                    <p id="createdAt"></p>
+                </div>
+                <div id="userDetails" class="mt-4">
+                    <h5>User Details</h5>
+                    <p id="userName"></p>
+                    <p id="userEmail"></p>
+                    <p id="userSpecialisation"></p>
+                    <p id="userLocation"></p>
+                    <p id="userRole"></p>
+                    <p id="userPincode"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function fetchMaintenanceReports() {
+        const priority = document.getElementById('priorityFilter').value;
+        const towerId = document.getElementById('towerIdFilter').value;
+        let url = 'http://localhost:8083/api/maintenances';
+
+        if (priority) {
+            url += `/priority/${priority}`;
+        } else if (towerId) {
+            url += `/tower/${towerId}`;
+        }
+
+        try {
+            const response = await fetch(url);
+            const reports = await response.json();
+            const tableBody = document.getElementById('maintenanceTableBody');
+
+            // Clear existing data
+            tableBody.innerHTML = '';
+
+            reports.forEach(report => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${report.towerInfo}</td>
+                    <td>${report.maintenanceId}</td>
+                    <td>${report.user}</td>
+                    <td>${report.workOrder}</td>
+                    <td>${report.equipmentRequired}</td>
+                    <td>${report.issuesFaced}</td>
+                    <td>${report.priority}</td>
+                    <td>${new Date(report.createdAt).toLocaleString()}</td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="openIssueModal(${report.workOrder}, ${report.towerInfo})">Issue Equipment</button>
+                        <button class="btn btn-info mt-2" onclick="openViewModal(${report.workOrder}, ${report.user})">View Details</button>
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        } catch (error) {
+            console.error('Error fetching maintenance reports:', error);
+        }
+    }
+
+    function openIssueModal(workOrderId, towerId) {
+        document.getElementById('workOrderId').value = workOrderId;
+        document.getElementById('towerId').value = towerId;
+        new bootstrap.Modal(document.getElementById('issueEquipmentModal')).show();
+    }
+
+    async function openViewModal(workOrderId, userId) {
+        try {
+            // Fetch work order details
+            const workOrderResponse = await fetch(`http://localhost:8083/api/workorders/${workOrderId}`);
+            const workOrder = await workOrderResponse.json();
+
+            // Fetch user details
+            const userResponse = await fetch(`http://localhost:8083/api/users/${userId}`);
+            const user = await userResponse.json();
+
+            // Update modal with work order and user details
+            document.getElementById('taskDescription').innerText = `Task Description: ${workOrder.taskDescription}`;
+            document.getElementById('scheduledDate').innerText = `Scheduled Date: ${new Date(workOrder.scheduledDate).toLocaleDateString()}`;
+            document.getElementById('status').innerText = `Status: ${workOrder.status}`;
+            document.getElementById('completedDate').innerText = `Completed Date: ${new Date(workOrder.completedDate).toLocaleString()}`;
+            document.getElementById('createdAt').innerText = `Created At: ${new Date(workOrder.createdAt).toLocaleString()}`;
+
+            document.getElementById('userName').innerText = `Name: ${user.name}`;
+            document.getElementById('userEmail').innerText = `Email: ${user.email}`;
+            document.getElementById('userSpecialisation').innerText = `Specialisation: ${user.specialisation}`;
+            document.getElementById('userLocation').innerText = `Location: ${user.location}`;
+            document.getElementById('userRole').innerText = `Role: ${user.role}`;
+            document.getElementById('userPincode').innerText = `Pincode: ${user.pincode}`;
+
+            new bootstrap.Modal(document.getElementById('viewDetailsModal')).show();
+        } catch (error) {
+            console.error('Error fetching details:', error);
+        }
+    }
+
+    document.getElementById('issueEquipmentForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const workOrderId = document.getElementById('workOrderId').value;
+        const towerId = document.getElementById('towerId').value;
+        const manufacturer = document.getElementById('manufacturer').value;
+        const model = document.getElementById('model').value;
+        const serialNumber = document.getElementById('serialNumber').value;
+        const equipmentName = document.getElementById('equipmentName').value;
+
+        try {
+            const response = await fetch(`http://localhost:8083/api/equipments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    workorderId:workOrderId,
+                    towerId: towerId,
+                    manufacturer: manufacturer,
+                    model: model,
+                    serialNumber: serialNumber,
+                    equipmentName: equipmentName
+                })
+            });
+
+            if (response.ok) {
+                alert('Equipment issued successfully.');
+                document.getElementById('issueEquipmentForm').reset();
+                new bootstrap.Modal(document.getElementById('issueEquipmentModal')).hide();
+                fetchMaintenanceReports(); // Refresh the table to show the latest data
+            } else {
+                alert('Failed to issue equipment.');
+            }
+        } catch (error) {
+            console.error('Error issuing equipment:', error);
+        }
+    });
+
+    // Fetch initial data when the page loads
+    fetchMaintenanceReports();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const toggler = document.getElementById('sidebar-toggler');
+
+        toggler.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-collapsed');
+            content.classList.toggle('content-collapsed');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapsible Sidebar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 280px;
+            background-color: #343a40;
+            padding-top: 1rem;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-collapsed {
+            transform: translateX(-280px);
+        }
+
+        .content {
+            margin-left: 280px;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .content-collapsed {
+            margin-left: 0;
+        }
+
+        .sidebar-toggler {
+            margin-top: 1rem;
+            z-index: 1001;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-280px);
+            }
+            .sidebar-collapsed {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+            }
+            .content-collapsed {
+                margin-left: 280px;
+            }
+            .sidebar-toggler {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar sidebar-collapsed">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4 ">Tower Management </span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="Home.html" class="nav-link text-white" aria-current="page">
+                    Maintenance Management
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link active">
+                    Tower Management
+                </a>
+            </li>
+            <li>
+                <a href="UserManagement.html" class="nav-link text-white">
+                    UserManagement
+                </a>
+            </li>
+        </ul>
+        <hr>
+        
+    </div>
+
+    <!-- Main content -->
+    <div id="content" class="content content-collapsed">
+        <button id="sidebar-toggler" class="btn btn-primary sidebar-toggler">☰</button>
+        
+<div class="container mt-5">
+        <h2 class="text-center">Tower Details</h2>
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addTowerModal">Add Tower</button>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Tower ID</th>
+                        <th>Height</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Pincode</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Power Reading</th>
+                        <th>Fuel Reading</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th>Last Maintained</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="towerTableBody">
+                    <!-- Data will be injected here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Edit Tower Modal -->
+    <div class="modal fade" id="editTowerModal" tabindex="-1" aria-labelledby="editTowerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTowerModalLabel">Edit Tower Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editTowerForm">
+                        <input type="hidden" id="editTowerId">
+                        <div class="mb-3">
+                            <label for="editHeight" class="form-label">Height</label>
+                            <input type="number" step="0.01" class="form-control" id="editHeight" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editType" class="form-label">Type</label>
+                            <input type="text" class="form-control" id="editType" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editStatus" class="form-label">Status</label>
+                            <input type="text" class="form-control" id="editStatus" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editLocation" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="editLocation" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPincode" class="form-label">Pincode</label>
+                            <input type="number" class="form-control" id="editPincode" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editLatitude" class="form-label">Latitude</label>
+                            <input type="number" step="0.0001" class="form-control" id="editLatitude" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editLongitude" class="form-label">Longitude</label>
+                            <input type="number" step="0.0001" class="form-control" id="editLongitude" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPowerReading" class="form-label">Power Reading</label>
+                            <input type="number" step="0.01" class="form-control" id="editPowerReading" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editFuelReading" class="form-label">Fuel Reading</label>
+                            <input type="number" step="0.01" class="form-control" id="editFuelReading" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <!-- Add Tower Modal -->
+    <div class="modal fade" id="addTowerModal" tabindex="-1" aria-labelledby="addTowerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTowerModalLabel">Add Tower</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addTowerForm">
+                        <div class="mb-3">
+                            <label for="height" class="form-label">Height</label>
+                            <input type="number" class="form-control" id="height" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type</label>
+                            <input type="text" class="form-control" id="type" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <input type="text" class="form-control" id="status" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pincode" class="form-label">Pincode</label>
+                            <input type="number" class="form-control" id="pincode" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="latitude" class="form-label">Latitude</label>
+                            <input type="number" step="0.0001" class="form-control" id="latitude" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="longitude" class="form-label">Longitude</label>
+                            <input type="number" step="0.0001" class="form-control" id="longitude" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="power_reading" class="form-label">Power Reading</label>
+                            <input type="number" step="0.01" class="form-control" id="power_reading" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fuel_reading" class="form-label">Fuel Reading</label>
+                            <input type="number" step="0.01" class="form-control" id="fuel_reading" required>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- Issue Work Order Modal -->
+    <div class="modal fade" id="issueWorkOrderModal" tabindex="-1" aria-labelledby="issueWorkOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="issueWorkOrderModalLabel">Issue Work Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="issueWorkOrderForm">
+                        <input type="hidden" id="workOrderTowerId">
+                        <div class="mb-3">
+                            <label for="taskDescription" class="form-label">Task Description</label>
+                            <textarea class="form-control" id="taskDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userId" class="form-label">Assign to Technician</label>
+                            <select class="form-select" id="userId" required>
+                                <!-- User options will be populated here by JavaScript -->
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Work Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Fetch tower details from the API and display them in the table
+        async function fetchTowerDetails() {
+            try {
+                const response = await fetch('http://localhost:8083/api/towers');
+                const towers = await response.json();
+                const tableBody = document.getElementById('towerTableBody');
+    
+                towers.forEach(tower => {
+                    const row = document.createElement('tr');
+    
+                    row.innerHTML = `
+                        <td>${tower.tower_id}</td>
+                        <td>${tower.height}</td>
+                        <td>${tower.type}</td>
+                        <td>${tower.status}</td>
+                        <td>${tower.location}</td>
+                        <td>${tower.pincode}</td>
+                        <td>${tower.latitude}</td>
+                        <td>${tower.longitude}</td>
+                        <td>${tower.power_reading}</td>
+                        <td>${tower.fuel_reading}</td>
+                        <td>${new Date(tower.created_at).toLocaleString()}</td>
+                        <td>${new Date(tower.updated_at).toLocaleString()}</td>
+                        <td>${new Date(tower.last_maintained).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning mb-2" onclick="editTower(${tower.tower_id})">Edit</button>
+                            <button class="btn btn-sm btn-danger mb-2" onclick="deleteTower(${tower.tower_id})">Delete</button>
+                            <button class="btn btn-sm btn-info" onclick="issueWorkOrder(${tower.tower_id})">Issue Work Order</button>
+                        </td>
+                    `;
+    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching tower details:', error);
+            }
+        }
+    
+    
+        // Function to open the "Issue Work Order" modal and populate the technician dropdown
+    function issueWorkOrder(towerId) {
+        document.getElementById('workOrderTowerId').value = towerId;
+    
+        fetch('http://localhost:8083/api/users')
+            .then(response => response.json())
+            .then(users => {
+                const userDropdown = document.getElementById('userId');
+                userDropdown.innerHTML = ''; // Clear previous options
+    
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.userId;
+                    option.text = ` ${user.userId} - ${user.name} (${user.role}) - ${user.specialisation}  - ${user.pincode}`;
+                    userDropdown.appendChild(option);
+                });
+    
+                const workOrderModal = new bootstrap.Modal(document.getElementById('issueWorkOrderModal'));
+                workOrderModal.show();
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    }
+    
+    // Handle the work order form submission
+    document.getElementById('issueWorkOrderForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+    
+        const workOrder = {
+            tower: document.getElementById('workOrderTowerId').value,
+            taskDescription: document.getElementById('taskDescription').value,
+            user: document.getElementById('userId').value
+        };
+    
+        fetch('http://localhost:8083/api/workorders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(workOrder)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Work order issued successfully');
+                const workOrderModal = bootstrap.Modal.getInstance(document.getElementById('issueWorkOrderModal'));
+                workOrderModal.hide();
+            } else {
+                alert('Failed to issue work order');
+            }
+        })
+        .catch(error => console.error('Error issuing work order:', error));
+    });
+    
+    
+        // Open the modal and pre-fill the form with tower details
+        function editTower(towerId) {
+            fetch(`http://localhost:8083/api/towers/${towerId}`)
+                .then(response => response.json())
+                .then(tower => {
+                    document.getElementById('editTowerId').value = tower.tower_id;
+                    document.getElementById('editHeight').value = tower.height;
+                    document.getElementById('editType').value = tower.type;
+                    document.getElementById('editStatus').value = tower.status;
+                    document.getElementById('editLocation').value = tower.location;
+                    document.getElementById('editPincode').value = tower.pincode;
+                    document.getElementById('editLatitude').value = tower.latitude;
+                    document.getElementById('editLongitude').value = tower.longitude;
+                    document.getElementById('editPowerReading').value = tower.power_reading;
+                    document.getElementById('editFuelReading').value = tower.fuel_reading;
+    
+                    // Show the modal
+                    const editModal = new bootstrap.Modal(document.getElementById('editTowerModal'));
+                    editModal.show();
+                })
+                .catch(error => console.error('Error fetching tower details:', error));
+        }
+    
+        // Function to handle adding a new tower
+        document.getElementById('addTowerForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            let newTower = {
+                height: document.getElementById('height').value,
+                type: document.getElementById('type').value,
+                status: document.getElementById('status').value,
+                location: document.getElementById('location').value,
+                pincode: document.getElementById('pincode').value,
+                latitude: document.getElementById('latitude').value,
+                longitude: document.getElementById('longitude').value,
+                power_reading: document.getElementById('power_reading').value,
+                fuel_reading: document.getElementById('fuel_reading').value,
+                deletedStatus: false
+            };
+    
+            fetch('http://localhost:8083/api/towers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newTower)
+            }).then(response => {
+                if (response.ok) {
+                    fetchTowerDetails();
+                    const addModal = bootstrap.Modal.getInstance(document.getElementById('addTowerModal'));
+                    addModal.hide();
+                } else {
+                    alert('Failed to add tower');
+                }
+            });
+        });
+    
+        document.getElementById('editTowerForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+    
+            const towerId = document.getElementById('editTowerId').value;
+            const updatedTower = {
+                height: document.getElementById('editHeight').value,
+                type: document.getElementById('editType').value,
+                status: document.getElementById('editStatus').value,
+                location: document.getElementById('editLocation').value,
+                pincode: document.getElementById('editPincode').value,
+                latitude: document.getElementById('editLatitude').value,
+                longitude: document.getElementById('editLongitude').value,
+                power_reading: document.getElementById('editPowerReading').value,
+                fuel_reading: document.getElementById('editFuelReading').value,
+            };
+    
+            try {
+                const response = await fetch(`http://localhost:8083/api/towers/${towerId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedTower)
+                });
+    
+                if (response.ok) {
+                    alert('Tower details updated successfully');
+                    
+                    // Close the modal
+                    const editModal = bootstrap.Modal.getInstance(document.getElementById('editTowerModal'));
+                    editModal.hide();
+    
+                    // Clear the table before reloading data
+                    document.getElementById('towerTableBody').innerHTML = '';
+    
+                    // Reload the tower list to show updated data
+                    fetchTowerDetails();
+                } else {
+                    alert('Failed to update tower details');
+                }
+            } catch (error) {
+                console.error('Error updating tower details:', error);
+            }
+        });
+    
+        // Function to handle deleting a tower
+        function deleteTower(towerId) {
+            if (confirm('Are you sure you want to delete this tower?')) {
+                fetch(`http://localhost:8083/api/towers/delete/${towerId}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        alert('Tower deleted successfully');
+                        
+                        // Clear the table before reloading data
+                        document.getElementById('towerTableBody').innerHTML = '';
+    
+                        // Reload the tower list to show updated data
+                        fetchTowerDetails();
+                    } else {
+                        alert('Failed to delete tower');
+                    }
+                }).catch(error => console.error('Error deleting tower:', error));
+            }
+        }
+    
+        // Call the function when the page loads
+        window.onload = fetchTowerDetails;
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const toggler = document.getElementById('sidebar-toggler');
+
+        toggler.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-collapsed');
+            content.classList.toggle('content-collapsed');
+        });
+    </script>
+</body>
+</html>

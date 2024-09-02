@@ -1,5 +1,5 @@
 @echo off
-set BASE_DIR=C:\Users\kapildev\Desktop\main_TTM\TowerManagementSystem\TowerManagementSystemV1
+set BASE_DIR=C:/Users/Verizon1/Desktop/ttm-main/TowerManagementSystem/TowerManagementSystemV1
 
 for %%D in (
     sertry
@@ -13,7 +13,7 @@ for %%D in (
     workorderservice
 ) do (
     echo Starting %%D...
-    start /min cmd /c "cd /d %BASE_DIR%\%%D && mvn clean spring-boot:run"
+    start /min cmd /c "cd /d %BASE_DIR%\%%D && mvn  spring-boot:run"
     timeout /t 5 >nul
 )
 
