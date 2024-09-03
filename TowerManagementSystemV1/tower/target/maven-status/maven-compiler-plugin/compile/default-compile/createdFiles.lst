@@ -1,7 +1,5 @@
 com\towermanagement\tower\model\Tower.class
-com\towermanagement\tower\config\WebConfig$1.class
-com\towermanagement\tower\config\WebConfig.class
+com\towermanagement\tower\repository\TowerRepository.class
 com\towermanagement\tower\controller\TowerController.class
 com\towermanagement\tower\service\TowerService.class
-com\towermanagement\tower\repository\TowerRepository.class
 com\towermanagement\tower\TowerApplication.class
