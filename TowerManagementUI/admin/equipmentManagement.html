@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 280px;
+            background-color: #343a40;
+            padding-top: 1rem;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-collapsed {
+            transform: translateX(-280px);
+        }
+
+        .content {
+            margin-left: 280px;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .content-collapsed {
+            margin-left: 0;
+        }
+
+        .sidebar-toggler {
+            margin-top: 1rem;
+            z-index: 1001;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-280px);
+            }
+            .sidebar-collapsed {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+            }
+            .content-collapsed {
+                margin-left: 280px;
+            }
+            .sidebar-toggler {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar sidebar-collapsed">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4 ">Tower Management </span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="Home.html" class="nav-link text-white" aria-current="page">
+                    Maintenance Management
+                </a>
+            </li>
+            <li>
+                <a href="TowerManagement.html" class="nav-link text-white">
+                    Tower Management
+                </a>
+            </li>
+            <li>
+                <a href="UserManagement.html" class="nav-link text-white">
+                    UserManagement
+                </a>
+            </li>
+            <li>
+                <a href="equipmentManagement.html" class="nav-link active">
+                    Equipment Management
+                </a>
+            </li>
+            <li>
+                <a href="workorder.html" class="nav-link text-white">
+                    WorkOrder Management
+                </a>
+            </li>
+        </ul>
+        <hr>
+        
+    </div>
+
+    <!-- Main content -->
+    <div id="content" class="content content-collapsed">
+        <button id="sidebar-toggler" class="btn btn-primary sidebar-toggler">☰</button>
+        
+<div class="container mt-5">
+    <div class="container mt-5">
+        <h2 class="mb-4">Equipment List</h2>
+        
+        <!-- Filter Section -->
+        <div class="mb-4">
+            <div class="row">
+                <!-- Claimed Status Filter -->
+                <div class="col-md-6">
+                    <label for="claimedFilter" class="form-label">Filter by Claimed Status:</label>
+                    <select id="claimedFilter" class="form-select" onchange="filterEquipment()">
+                        <option value="all">All</option>
+                        <option value="claimed">Claimed</option>
+                        <option value="not_claimed">Not Claimed</option>
+                    </select>
+                </div>
+                <!-- Single Date Filter -->
+                <div class="col-md-6">
+                    <label for="createdDateFilter" class="form-label">Filter by Created Date:</label>
+                    <input type="date" id="createdDateFilter" class="form-control" onchange="filterEquipment()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Equipment Table -->
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Equipment ID</th>
+                    <th>Work Order ID</th>
+                    <th>Tower ID</th>
+                    <th>Serial Number</th>
+                    <th>Manufacture</th>
+                    <th>Model</th>
+                    <th>Created At</th>
+                    <th>Equipment Name</th>
+                    <th>Deleted Status</th>
+                    <th>Claimed</th>
+                </tr>
+            </thead>
+            <tbody id="equipmentTableBody">
+                <!-- Rows will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let equipmentData = [];
+
+        // Fetch equipment data from the API
+        async function fetchEquipmentData() {
+            try {
+                const response = await fetch('http://localhost:8083/api/equipments');
+                equipmentData = await response.json();
+                loadTable(equipmentData);
+            } catch (error) {
+                console.error('Error fetching equipment data:', error);
+            }
+        }
+
+        function loadTable(data) {
+            const tableBody = document.getElementById('equipmentTableBody');
+            tableBody.innerHTML = '';
+            data.forEach(equipment => {
+                const row = `
+                    <tr>
+                        <td>${equipment.equipmentId}</td>
+                        <td>${equipment.workorderId}</td>
+                        <td>${equipment.towerId}</td>
+                        <td>${equipment.serialNumber}</td>
+                        <td>${equipment.manufacture || 'N/A'}</td>
+                        <td>${equipment.model}</td>
+                        <td>${new Date(equipment.createdAt).toLocaleString()}</td>
+                        <td>${equipment.equipmentName}</td>
+                        <td>${equipment.deletedStatus ? 'Yes' : 'No'}</td>
+                        <td>${equipment.claimed ? 'Yes' : 'No'}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        function filterEquipment() {
+            const filterValue = document.getElementById('claimedFilter').value;
+            const createdDate = new Date(document.getElementById('createdDateFilter').value);
+            let filteredData = equipmentData;
+
+            if (filterValue === 'claimed') {
+                filteredData = filteredData.filter(equipment => equipment.claimed === true);
+            } else if (filterValue === 'not_claimed') {
+                filteredData = filteredData.filter(equipment => equipment.claimed === false);
+            }
+
+            if (createdDate) {
+                filteredData = filteredData.filter(equipment => {
+                    const equipmentDate = new Date(equipment.createdAt);
+                    return (
+                        equipmentDate.getFullYear() === createdDate.getFullYear() &&
+                        equipmentDate.getMonth() === createdDate.getMonth() &&
+                        equipmentDate.getDate() === createdDate.getDate()
+                    );
+                });
+            }
+
+            loadTable(filteredData);
+        }
+
+        // Initial fetch and load of the table
+        fetchEquipmentData();
+    </script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const toggler = document.getElementById('sidebar-toggler');
+
+        toggler.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-collapsed');
+            content.classList.toggle('content-collapsed');
+        });
+    </script>
+</body>
+</html>
